@@ -31,13 +31,17 @@ const ParkingLot = ({ parkingLot }) => {
             height: entrance.height,
             backgroundColor: '#28a745',
             border: '2px solid #1e7e34',
-            borderRadius: '4px',
+            borderRadius: '6px',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
             color: 'white',
-            fontSize: '12px',
-            fontWeight: 'bold'
+            fontSize: '1.1rem',
+            fontWeight: 'bold',
+            letterSpacing: '1px',
+            padding: '0 12px',
+            minWidth: '70px',
+            boxShadow: '0 2px 8px rgba(40,167,69,0.15)'
           }}
         >
           ENTRANCE
@@ -54,13 +58,17 @@ const ParkingLot = ({ parkingLot }) => {
             height: exit.height,
             backgroundColor: '#dc3545',
             border: '2px solid #c82333',
-            borderRadius: '4px',
+            borderRadius: '6px',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
             color: 'white',
-            fontSize: '12px',
-            fontWeight: 'bold'
+            fontSize: '1.1rem',
+            fontWeight: 'bold',
+            letterSpacing: '1px',
+            padding: '0 12px',
+            minWidth: '70px',
+            boxShadow: '0 2px 8px rgba(220,53,69,0.15)'
           }}
         >
           EXIT
@@ -77,16 +85,24 @@ const ParkingLot = ({ parkingLot }) => {
             height: buildingEntrance.height,
             backgroundColor: '#6c757d',
             border: '2px solid #545b62',
-            borderRadius: '4px',
+            borderRadius: '6px',
             display: 'flex',
+            flexDirection: 'column',
             alignItems: 'center',
             justifyContent: 'center',
             color: 'white',
-            fontSize: '12px',
-            fontWeight: 'bold'
+            fontSize: '1.1rem',
+            fontWeight: 'bold',
+            letterSpacing: '1px',
+            padding: '0 8px',
+            minWidth: '70px',
+            boxShadow: '0 2px 8px rgba(108,117,125,0.15)',
+            zIndex: 2,
+            transform: 'translateY(-60%)',
           }}
         >
-          BUILDING
+          <span>BUILDING</span>
+          <span style={{fontSize: '0.8rem', fontWeight: 400, marginTop: 2}}>ENTRANCE</span>
         </div>
 
         {/* Parking Spaces */}

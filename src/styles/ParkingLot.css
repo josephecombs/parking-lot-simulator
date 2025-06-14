@@ -10,7 +10,7 @@
 }
 
 .parking-lot {
-  background: linear-gradient(145deg, #f8f9fa, #e9ecef);
+  background: #44484b;
   border: 3px solid #495057;
   border-radius: 12px;
   box-shadow: 
@@ -18,6 +18,7 @@
     0 4px 8px rgba(0, 0, 0, 0.06);
   overflow: hidden;
   transition: all 0.3s ease;
+  padding-top: 48px;
 }
 
 .parking-lot:hover {

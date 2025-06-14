@@ -44,4 +44,15 @@
     opacity: 1;
     transform: scale(1);
   }
+}
+
+.walk-distance {
+  font-size: 0.75rem;
+  color: #888;
+  background: rgba(255,255,255,0.7);
+  border-radius: 6px;
+  padding: 0 4px;
+  margin-bottom: 2px;
+  pointer-events: none;
+  user-select: none;
 } 

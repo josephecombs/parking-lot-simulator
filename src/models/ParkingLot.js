@@ -39,9 +39,22 @@ export class ParkingLot {
     const startX = (this.width - totalRowWidth) / 2;
     const y = 10; // Small margin from the top
 
+    // Midpoint of the building entrance (top edge)
+    const buildingMidX = this.buildingEntrance.x + this.buildingEntrance.width / 2;
+    const buildingMidY = this.buildingEntrance.y + this.buildingEntrance.height / 2;
+
     for (let i = 0; i < numSpaces; i++) {
       const x = startX + i * spaceWidth;
-      this.spaces.push(new ParkingLotSpace(x, y, spaceWidth, spaceHeight, borderWidth));
+      // Midpoint of the top edge of the space
+      const spaceMidX = x + spaceWidth / 2;
+      const spaceMidY = y;
+      // Euclidean distance
+      const walkDistance = Math.sqrt(
+        Math.pow(spaceMidX - buildingMidX, 2) + Math.pow(spaceMidY - buildingMidY, 2)
+      );
+      const space = new ParkingLotSpace(x, y, spaceWidth, spaceHeight, borderWidth);
+      space.walkDistance = walkDistance;
+      this.spaces.push(space);
     }
   }
 
