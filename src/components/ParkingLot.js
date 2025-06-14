@@ -52,9 +52,8 @@ const ParkingLot = ({ parkingLot }) => {
           className="exit"
           style={{
             position: 'absolute',
-            left: exit.x,
+            right: 0,
             top: exit.y,
-            width: exit.width,
             height: exit.height,
             backgroundColor: '#dc3545',
             border: '2px solid #c82333',
@@ -66,9 +65,10 @@ const ParkingLot = ({ parkingLot }) => {
             fontSize: '1.1rem',
             fontWeight: 'bold',
             letterSpacing: '1px',
-            padding: '0 12px',
-            minWidth: '70px',
-            boxShadow: '0 2px 8px rgba(220,53,69,0.15)'
+            padding: '0 16px',
+            width: 'auto',
+            boxShadow: '0 2px 8px rgba(220,53,69,0.15)',
+            overflow: 'visible',
           }}
         >
           EXIT
