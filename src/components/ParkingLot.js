@@ -27,7 +27,6 @@ const ParkingLot = ({ parkingLot }) => {
             position: 'absolute',
             left: entrance.x,
             top: entrance.y,
-            width: entrance.width,
             height: entrance.height,
             backgroundColor: '#28a745',
             border: '2px solid #1e7e34',
@@ -39,9 +38,10 @@ const ParkingLot = ({ parkingLot }) => {
             fontSize: '1.1rem',
             fontWeight: 'bold',
             letterSpacing: '1px',
-            padding: '0 12px',
-            minWidth: '70px',
-            boxShadow: '0 2px 8px rgba(40,167,69,0.15)'
+            padding: '0 16px',
+            width: 'auto',
+            boxShadow: '0 2px 8px rgba(40,167,69,0.15)',
+            overflow: 'visible',
           }}
         >
           ENTRANCE
@@ -94,8 +94,8 @@ const ParkingLot = ({ parkingLot }) => {
             fontSize: '1.1rem',
             fontWeight: 'bold',
             letterSpacing: '1px',
-            padding: '0 8px',
-            minWidth: '70px',
+            padding: '0 16px',
+            width: 'auto',
             boxShadow: '0 2px 8px rgba(108,117,125,0.15)',
             zIndex: 2,
             transform: 'translateY(-60%)',
