@@ -5,6 +5,11 @@ import '../styles/ParkingLot.css';
 const ParkingLot = ({ parkingLot, cars = [], time = 0, onCarHover, onCarLeave }) => {
   const { width, height, entrance, exit, buildingEntrance, spaces } = parkingLot;
 
+  // Extract people from cars that are currently walking
+  const walkingPeople = cars
+    .map(car => car.getPerson())
+    .filter(person => person && person.isCurrentlyWalking());
+
   return (
     <div className="parking-lot-container" style={{ position: 'relative' }}>
       <div 
@@ -107,6 +112,40 @@ const ParkingLot = ({ parkingLot, cars = [], time = 0, onCarHover, onCarLeave })
           <ParkingLotSpace key={index} space={space} isLast={index === spaces.length - 1} />
         ))}
 
+        {/* Render walking people */}
+        {walkingPeople.map((person) => {
+          const pos = person.getPosition();
+          const isWalkingToStore = person.isWalkingToStore;
+          const isWalkingToCar = person.isWalkingToCar;
+          
+          return (
+            <div
+              key={`person-${person.id}`}
+              style={{
+                position: 'absolute',
+                left: pos.x - 12, // Center the person character
+                top: pos.y - 12,
+                width: 24,
+                height: 24,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                fontSize: '20px',
+                cursor: 'pointer',
+                zIndex: 400, // Higher than cars
+                transition: 'none',
+                boxShadow: '0 2px 8px rgba(0,0,0,0.2)',
+                filter: 'drop-shadow(0 0 4px rgba(255,255,255,0.6))',
+                transform: 'scale(1.2)',
+                animation: 'personWalk 0.8s ease-in-out infinite alternate'
+              }}
+              title={`Person ${person.id} - ${isWalkingToStore ? 'Walking to Store' : 'Walking to Car'}`}
+            >
+              {isWalkingToStore ? '🚶' : '🚶‍♂️'}
+            </div>
+          );
+        })}
+
         {/* Render cars as unicode characters */}
         {cars.map((car) => {
           const pos = car.getPosition();
@@ -147,12 +186,17 @@ const ParkingLot = ({ parkingLot, cars = [], time = 0, onCarHover, onCarLeave })
         })}
       </div>
       
-      {/* CSS Animation for moving cars */}
+      {/* CSS Animations */}
       <style dangerouslySetInnerHTML={{
         __html: `
           @keyframes carPulse {
             0% { transform: scale(1.1); }
             100% { transform: scale(1.2); }
+          }
+          
+          @keyframes personWalk {
+            0% { transform: scale(1.2) translateY(0px); }
+            100% { transform: scale(1.2) translateY(-2px); }
           }
         `
       }} />

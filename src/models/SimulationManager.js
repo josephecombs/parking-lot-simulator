@@ -100,6 +100,13 @@ export class SimulationManager {
       }
     });
 
+    // Update walking positions of people
+    this.people.forEach(person => {
+      if (person.isCurrentlyWalking()) {
+        person.updateWalkingPosition(this.currentTime);
+      }
+    });
+
     // Update shopping status for people
     this.people.forEach(person => {
       person.updateShopping(this.currentTime);

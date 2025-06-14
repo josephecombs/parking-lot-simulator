@@ -48,6 +48,7 @@ export class Car {
   arrive(currentTime, parkingLot) {
     this.status = 'arrived';
     this.actualArrivalTime = currentTime;
+    this.parkingLot = parkingLot; // Store reference to parking lot
     
     // Position car at entrance
     this.x = parkingLot.entrance.x + parkingLot.entrance.width;
@@ -149,7 +150,11 @@ export class Car {
     
     // Check if movement is complete
     if (progress >= 1) {
-      this.completeMovement(currentTime);
+      if (this.status === 'driving') {
+        this.completeMovement(currentTime);
+      } else if (this.status === 'exiting') {
+        this.completeExit(currentTime);
+      }
     }
   }
 
@@ -166,10 +171,10 @@ export class Car {
       this.occupiedSpace = this.targetSpace; // Set the occupied space reference
     }
     
-    // Start person's shopping process
+    // Start person's walking to store process
     if (this.person) {
-      this.person.startWalking(currentTime);
-      this.person.enterStore(currentTime);
+      const carPosition = { x: this.x, y: this.y, width: this.width, height: this.height };
+      this.person.startWalkingToStore(currentTime, carPosition, this.parkingLot.buildingEntrance);
       this.status = 'shopping';
     }
     
@@ -201,6 +206,36 @@ export class Car {
 
   startShopping() {
     this.status = 'shopping';
+  }
+
+  completeShopping(currentTime) {
+    // Person has returned to car, now drive to exit
+    this.status = 'exiting';
+    this.startDrivingToExit(currentTime);
+  }
+
+  startDrivingToExit(currentTime) {
+    this.isMoving = true;
+    this.movementStartTime = currentTime;
+    
+    // Set start position (current position in space)
+    this.startX = this.x;
+    this.startY = this.y;
+    
+    // Set target position (exit)
+    this.targetX = this.parkingLot.exit.x - this.width;
+    this.targetY = this.parkingLot.exit.y + this.parkingLot.exit.height / 2 - this.height / 2;
+    
+    // Calculate total distance to travel
+    const distanceX = this.targetX - this.startX;
+    const distanceY = this.targetY - this.startY;
+    const totalDistance = Math.sqrt(distanceX * distanceX + distanceY * distanceY);
+    
+    // Calculate movement time based on car's lot speed
+    const lotSpeed = this.person.getLotSpeed(); // pixels per second
+    this.totalMovementTime = totalDistance / lotSpeed;
+    
+    console.log(`Car ${this.id} starting drive to exit: distance=${totalDistance.toFixed(2)}px, speed=${lotSpeed}px/s, time=${this.totalMovementTime.toFixed(2)}s`);
   }
 
   getPosition() {
@@ -257,5 +292,19 @@ export class Car {
         isWalking: person.isCurrentlyWalking()
       } : null
     };
+  }
+
+  completeExit(currentTime) {
+    this.isMoving = false;
+    this.status = 'exited';
+    this.exitTime = currentTime;
+    
+    // Vacate the parking space
+    if (this.occupiedSpace) {
+      this.occupiedSpace.vacate();
+      this.occupiedSpace = null;
+    }
+    
+    console.log(`Car ${this.id} completed exit at time ${currentTime}`);
   }
 } 
