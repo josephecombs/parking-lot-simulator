@@ -4,7 +4,7 @@ import ParkingLotComponent from './components/ParkingLot';
 import './App.css';
 
 function App() {
-  const [parkingLot] = useState(() => new ParkingLot(1000, 1000));
+  const [parkingLot] = useState(() => new ParkingLot(1000, 500));
 
   return (
     <div className="App">
