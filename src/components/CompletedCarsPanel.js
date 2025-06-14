@@ -36,7 +36,7 @@ const CompletedCarsPanel = ({ completedCars, formatTime, formatArrivalTime }) =>
         borderBottom: '2px solid #dee2e6',
         paddingBottom: '8px'
       }}>
-        ✅ Completed Cars ({completedCars.length})
+        ✅ Exited Cars ({completedCars.length})
       </h3>
       
       <div style={{ fontSize: '12px', color: '#6c757d', marginBottom: '12px' }}>
