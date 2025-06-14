@@ -17,7 +17,6 @@ const ParkingLot = ({ parkingLot }) => {
           border: '3px solid #495057',
           borderRadius: '8px',
           boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
-          overflow: 'hidden'
         }}
       >
         {/* Building Entrance - first child inside .parking-lot */}
@@ -26,7 +25,7 @@ const ParkingLot = ({ parkingLot }) => {
           style={{
             position: 'absolute',
             left: '50%',
-            top: 0,
+            top: -45,
             transform: 'translateX(-50%)',
             backgroundColor: '#6c757d',
             border: '2px solid #545b62',
