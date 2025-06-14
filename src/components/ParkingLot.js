@@ -2,7 +2,7 @@ import React from 'react';
 import ParkingLotSpace from './ParkingLotSpace';
 import '../styles/ParkingLot.css';
 
-const ParkingLot = ({ parkingLot }) => {
+const ParkingLot = ({ parkingLot, cars = [], time = 0 }) => {
   const { width, height, entrance, exit, buildingEntrance, spaces } = parkingLot;
 
   return (
@@ -106,6 +106,9 @@ const ParkingLot = ({ parkingLot }) => {
         {spaces.map((space, index) => (
           <ParkingLotSpace key={index} space={space} isLast={index === spaces.length - 1} />
         ))}
+
+        {/* Cars will be rendered here in the next step */}
+        {/* For now, we're just setting up the infrastructure */}
       </div>
     </div>
   );
