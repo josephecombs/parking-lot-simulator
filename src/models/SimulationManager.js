@@ -26,7 +26,8 @@ export class SimulationManager {
     console.log(`⏰ Cars will arrive between 00:00 and ${this.formatArrivalTime(maxArrivalTime)}`);
     
     for (let i = 0; i < numCars; i++) {
-      const arrivalTime = Math.floor(Math.random() * maxArrivalTime);
+      // Ensure the first car arrives at t=0
+      const arrivalTime = i === 0 ? 0 : Math.floor(Math.random() * maxArrivalTime);
       const car = new Car(arrivalTime);
       const person = new Person();
       
@@ -83,13 +84,25 @@ export class SimulationManager {
     );
 
     carsToArrive.forEach(({ car, person }) => {
-      car.arrive(this.currentTime);
+      car.arrive(this.currentTime, this.parkingLot);
       this.cars.push(car);
       this.people.push(person);
     });
 
     // Remove arrived cars from scheduled list
     this.scheduledCars = this.scheduledCars.filter(({ car }) => car.getStatus() === 'scheduled');
+
+    // Update positions of moving cars
+    this.cars.forEach(car => {
+      if (car.isCurrentlyMoving()) {
+        car.updatePosition(this.currentTime);
+      }
+    });
+
+    // Update shopping status for people
+    this.people.forEach(person => {
+      person.updateShopping(this.currentTime);
+    });
 
     // Check for completed cars (exited)
     const completedCars = this.cars.filter(car => car.getStatus() === 'exited');

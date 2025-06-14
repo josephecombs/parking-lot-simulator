@@ -12,11 +12,21 @@ export class Car {
     this.occupiedSpace = null;
     this.person = null; // Associated person
     this.arrivalTime = arrivalTime; // Time in seconds when car should arrive
-    this.status = 'scheduled'; // 'scheduled', 'arrived', 'parked', 'shopping', 'exited'
+    this.status = 'scheduled'; // 'scheduled', 'arrived', 'driving', 'parked', 'shopping', 'exited'
     this.actualArrivalTime = null;
     this.parkingTime = null;
     this.exitTime = null;
     this.unicodeChar = this.generateUnicodeChar();
+    
+    // Movement properties
+    this.targetSpace = null;
+    this.startX = 0;
+    this.startY = 0;
+    this.targetX = 0;
+    this.targetY = 0;
+    this.movementStartTime = 0;
+    this.totalMovementTime = 0;
+    this.isMoving = false;
   }
 
   generateRandomColor() {
@@ -35,6 +45,120 @@ export class Car {
     return carChars[Math.floor(Math.random() * carChars.length)];
   }
 
+  arrive(currentTime, parkingLot) {
+    this.status = 'arrived';
+    this.actualArrivalTime = currentTime;
+    
+    // Position car at entrance
+    this.x = parkingLot.entrance.x + parkingLot.entrance.width;
+    this.y = parkingLot.entrance.y + parkingLot.entrance.height / 2 - this.height / 2;
+    
+    // Find closest available space to building entrance
+    this.findClosestSpace(parkingLot);
+    
+    if (this.targetSpace) {
+      this.startDriving(currentTime);
+    }
+  }
+
+  findClosestSpace(parkingLot) {
+    const availableSpaces = parkingLot.getSpaces().filter(space => space.isAvailable());
+    
+    if (availableSpaces.length === 0) {
+      console.warn(`No available spaces for car ${this.id}`);
+      return;
+    }
+
+    // Find space with minimum distance to building entrance
+    const buildingEntrance = parkingLot.buildingEntrance;
+    const buildingX = buildingEntrance.x + buildingEntrance.width / 2;
+    const buildingY = buildingEntrance.y + buildingEntrance.height / 2;
+
+    let closestSpace = null;
+    let minDistance = Infinity;
+
+    availableSpaces.forEach(space => {
+      const spaceX = space.x + space.width / 2;
+      const spaceY = space.y + space.height / 2;
+      
+      // Calculate distance using Pythagorean theorem
+      const distance = Math.sqrt(
+        Math.pow(spaceX - buildingX, 2) + Math.pow(spaceY - buildingY, 2)
+      );
+      
+      if (distance < minDistance) {
+        minDistance = distance;
+        closestSpace = space;
+      }
+    });
+
+    this.targetSpace = closestSpace;
+    console.log(`Car ${this.id} selected space at distance ${minDistance.toFixed(2)}px from building entrance`);
+  }
+
+  startDriving(currentTime) {
+    if (!this.targetSpace || !this.person) return;
+
+    this.status = 'driving';
+    this.isMoving = true;
+    this.movementStartTime = currentTime;
+    
+    // Set start position (current position at entrance)
+    this.startX = this.x;
+    this.startY = this.y;
+    
+    // Set target position (center of the target space)
+    this.targetX = this.targetSpace.x + (this.targetSpace.width - this.width) / 2;
+    this.targetY = this.targetSpace.y + (this.targetSpace.height - this.height) / 2;
+    
+    // Calculate total distance to travel
+    const distanceX = this.targetX - this.startX;
+    const distanceY = this.targetY - this.startY;
+    const totalDistance = Math.sqrt(distanceX * distanceX + distanceY * distanceY);
+    
+    // Calculate movement time based on car's lot speed
+    const lotSpeed = this.person.getLotSpeed(); // pixels per second
+    this.totalMovementTime = totalDistance / lotSpeed;
+    
+    console.log(`Car ${this.id} starting drive: distance=${totalDistance.toFixed(2)}px, speed=${lotSpeed}px/s, time=${this.totalMovementTime.toFixed(2)}s`);
+  }
+
+  updatePosition(currentTime) {
+    if (!this.isMoving || !this.person) return;
+
+    const elapsedTime = currentTime - this.movementStartTime;
+    const progress = Math.min(elapsedTime / this.totalMovementTime, 1);
+    
+    // Linear interpolation between start and target positions
+    this.x = this.startX + (this.targetX - this.startX) * progress;
+    this.y = this.startY + (this.targetY - this.startY) * progress;
+    
+    // Check if movement is complete
+    if (progress >= 1) {
+      this.completeMovement(currentTime);
+    }
+  }
+
+  completeMovement(currentTime) {
+    this.isMoving = false;
+    this.status = 'parked';
+    this.parkingTime = currentTime;
+    
+    // Park in the target space
+    if (this.targetSpace) {
+      this.park(this.targetSpace);
+    }
+    
+    // Start person's shopping process
+    if (this.person) {
+      this.person.startWalking(currentTime);
+      this.person.enterStore(currentTime);
+      this.status = 'shopping';
+    }
+    
+    console.log(`Car ${this.id} completed movement and parked at time ${currentTime}`);
+  }
+
   park(space) {
     if (space && space.isAvailable()) {
       this.occupiedSpace = space;
@@ -43,9 +167,6 @@ export class Car {
       // Position car in the center of the space
       this.x = space.x + (space.width - this.width) / 2;
       this.y = space.y + (space.height - this.height) / 2;
-      
-      this.status = 'parked';
-      this.parkingTime = Date.now();
       
       return true;
     }
@@ -59,11 +180,6 @@ export class Car {
     }
     this.status = 'exited';
     this.exitTime = Date.now();
-  }
-
-  arrive(currentTime) {
-    this.status = 'arrived';
-    this.actualArrivalTime = currentTime;
   }
 
   startShopping() {
@@ -98,6 +214,10 @@ export class Car {
     return this.unicodeChar;
   }
 
+  isCurrentlyMoving() {
+    return this.isMoving;
+  }
+
   getCarInfo() {
     const person = this.getPerson();
     return {
@@ -109,6 +229,7 @@ export class Car {
       actualArrivalTime: this.actualArrivalTime,
       parkingTime: this.parkingTime,
       exitTime: this.exitTime,
+      isMoving: this.isMoving,
       person: person ? {
         id: person.id,
         walkSpeed: person.getWalkSpeed(),

@@ -110,6 +110,9 @@ const ParkingLot = ({ parkingLot, cars = [], time = 0, onCarHover, onCarLeave })
         {/* Render cars as unicode characters */}
         {cars.map((car) => {
           const pos = car.getPosition();
+          const carInfo = car.getCarInfo();
+          const isMoving = car.isCurrentlyMoving();
+          
           return (
             <div
               key={car.id}
@@ -125,19 +128,34 @@ const ParkingLot = ({ parkingLot, cars = [], time = 0, onCarHover, onCarLeave })
                 fontSize: '28px',
                 color: car.color,
                 cursor: 'pointer',
-                zIndex: 200,
-                transition: 'box-shadow 0.2s',
-                boxShadow: '0 2px 8px rgba(0,0,0,0.15)'
+                zIndex: isMoving ? 300 : 200,
+                transition: isMoving ? 'none' : 'box-shadow 0.2s',
+                boxShadow: isMoving 
+                  ? '0 4px 12px rgba(255,255,0,0.6), 0 0 20px rgba(255,255,0,0.3)' 
+                  : '0 2px 8px rgba(0,0,0,0.15)',
+                filter: isMoving ? 'drop-shadow(0 0 8px rgba(255,255,0,0.8))' : 'none',
+                transform: isMoving ? 'scale(1.1)' : 'scale(1)',
+                animation: isMoving ? 'carPulse 0.5s ease-in-out infinite alternate' : 'none'
               }}
-              onMouseEnter={() => onCarHover && onCarHover(car.getCarInfo())}
+              onMouseEnter={() => onCarHover && onCarHover(carInfo)}
               onMouseLeave={() => onCarLeave && onCarLeave()}
-              title={`Car #${car.id}`}
+              title={`Car #${car.id} - ${car.getStatus()}`}
             >
               {car.getUnicodeChar()}
             </div>
           );
         })}
       </div>
+      
+      {/* CSS Animation for moving cars */}
+      <style dangerouslySetInnerHTML={{
+        __html: `
+          @keyframes carPulse {
+            0% { transform: scale(1.1); }
+            100% { transform: scale(1.2); }
+          }
+        `
+      }} />
     </div>
   );
 };

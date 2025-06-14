@@ -14,6 +14,8 @@ export class Person {
     this.walkStartTime = 0;
     this.storeEntryTime = 0;
     this.storeExitTime = 0;
+    this.shoppingCompleteTime = 0;
+    this.hasCompletedShopping = false;
   }
 
   generateStoreVisitTime() {
@@ -51,11 +53,27 @@ export class Person {
   enterStore(time) {
     this.isInStore = true;
     this.storeEntryTime = time;
+    this.shoppingCompleteTime = time + this.storeVisitTime;
+    console.log(`Person ${this.id} entered store at ${time}s, will complete shopping at ${this.shoppingCompleteTime}s`);
   }
 
   exitStore(time) {
     this.isInStore = false;
     this.storeExitTime = time;
+    this.hasCompletedShopping = true;
+    console.log(`Person ${this.id} exited store at ${time}s after ${this.storeVisitTime}s visit`);
+  }
+
+  updateShopping(currentTime) {
+    if (this.isInStore && currentTime >= this.shoppingCompleteTime && !this.hasCompletedShopping) {
+      this.exitStore(currentTime);
+      this.stopWalking(currentTime);
+      
+      // Signal to car that shopping is complete
+      if (this.car) {
+        this.car.startShopping();
+      }
+    }
   }
 
   getWalkSpeed() {
@@ -80,5 +98,9 @@ export class Person {
 
   isCurrentlyWalking() {
     return this.isWalking;
+  }
+
+  hasFinishedShopping() {
+    return this.hasCompletedShopping;
   }
 } 
