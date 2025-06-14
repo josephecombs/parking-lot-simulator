@@ -7,34 +7,6 @@ const ParkingLot = ({ parkingLot }) => {
 
   return (
     <div className="parking-lot-container" style={{ position: 'relative' }}>
-      {/* Building Entrance - locked to top of lot */}
-      <div
-        className="building-entrance"
-        style={{
-          position: 'absolute',
-          left: '50%',
-          top: 0,
-          transform: 'translateX(-50%)',
-          backgroundColor: '#6c757d',
-          border: '2px solid #545b62',
-          borderRadius: '6px',
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          justifyContent: 'center',
-          color: 'white',
-          fontSize: '1.1rem',
-          fontWeight: 'bold',
-          letterSpacing: '1px',
-          padding: '0 16px',
-          width: 'auto',
-          boxShadow: '0 2px 8px rgba(108,117,125,0.15)',
-          zIndex: 100,
-        }}
-      >
-        <span>BUILDING</span>
-        <span style={{fontSize: '0.8rem', fontWeight: 400, marginTop: 2}}>ENTRANCE</span>
-      </div>
       <div 
         className="parking-lot"
         style={{
@@ -48,6 +20,35 @@ const ParkingLot = ({ parkingLot }) => {
           overflow: 'hidden'
         }}
       >
+        {/* Building Entrance - first child inside .parking-lot */}
+        <div
+          className="building-entrance"
+          style={{
+            position: 'absolute',
+            left: '50%',
+            top: 0,
+            transform: 'translateX(-50%)',
+            backgroundColor: '#6c757d',
+            border: '2px solid #545b62',
+            borderRadius: '6px',
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center',
+            color: 'white',
+            fontSize: '1.1rem',
+            fontWeight: 'bold',
+            letterSpacing: '1px',
+            padding: '0 16px',
+            width: 'auto',
+            boxShadow: '0 2px 8px rgba(108,117,125,0.15)',
+            zIndex: 100,
+          }}
+        >
+          <span>BUILDING</span>
+          <span style={{fontSize: '0.8rem', fontWeight: 400, marginTop: 2}}>ENTRANCE</span>
+        </div>
+
         {/* Entrance */}
         <div
           className="entrance"
