@@ -13,7 +13,7 @@ const ParkingLot = ({ parkingLot }) => {
           width: width,
           height: height,
           position: 'relative',
-          backgroundColor: '#e9ecef',
+          backgroundColor: 'darkgray',
           border: '3px solid #495057',
           borderRadius: '8px',
           boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
