@@ -36,7 +36,16 @@ const ParkingLotSpace = ({ space, isLast }) => {
       }}
       title={`Parking Space at (${x}, ${y}) - ${space.isOccupied ? 'Occupied' : 'Available'} - Walk: ${Math.round(walkDistance)}`}
     >
-      <span className="walk-distance" style={{ marginBottom: '-18px', background: 'white', color: '#222', borderRadius: 4, padding: '0 4px', fontWeight: 600, fontSize: '0.8rem', boxShadow: '0 1px 4px rgba(0,0,0,0.08)' }}>{Math.round(walkDistance)}</span>
+      <span className="walk-distance" style={{ 
+        marginBottom: '4px',
+        background: 'white',
+        color: '#222',
+        borderRadius: 4,
+        padding: '0 4px',
+        fontWeight: 600,
+        fontSize: '0.8rem',
+        boxShadow: '0 1px 4px rgba(0,0,0,0.08)'
+      }}>{Math.round(walkDistance)}</span>
     </div>
   );
 };
