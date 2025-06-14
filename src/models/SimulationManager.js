@@ -84,6 +84,7 @@ export class SimulationManager {
     );
 
     carsToArrive.forEach(({ car, person }) => {
+      console.log(`🚗 Car ${car.id} arriving at time ${this.currentTime}s`);
       car.arrive(this.currentTime, this.parkingLot);
       this.cars.push(car);
       this.people.push(person);

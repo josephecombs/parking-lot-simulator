@@ -53,15 +53,17 @@ export class Car {
     this.x = parkingLot.entrance.x + parkingLot.entrance.width;
     this.y = parkingLot.entrance.y + parkingLot.entrance.height / 2 - this.height / 2;
     
-    // Find closest available space to building entrance
-    this.findClosestSpace(parkingLot);
+    // Find and IMMEDIATELY claim the closest available space to building entrance
+    this.findAndClaimClosestSpace(parkingLot);
     
     if (this.targetSpace) {
       this.startDriving(currentTime);
+    } else {
+      console.warn(`Car ${this.id} could not find an available space!`);
     }
   }
 
-  findClosestSpace(parkingLot) {
+  findAndClaimClosestSpace(parkingLot) {
     const availableSpaces = parkingLot.getSpaces().filter(space => space.isAvailable());
     
     if (availableSpaces.length === 0) {
@@ -92,8 +94,20 @@ export class Car {
       }
     });
 
-    this.targetSpace = closestSpace;
-    console.log(`Car ${this.id} selected space at distance ${minDistance.toFixed(2)}px from building entrance`);
+    // IMMEDIATELY claim the space to prevent other cars from targeting it
+    if (closestSpace) {
+      // Double-check the space is still available before claiming
+      if (closestSpace.isAvailable()) {
+        this.targetSpace = closestSpace;
+        // Mark the space as occupied immediately
+        closestSpace.occupy(this);
+        console.log(`✅ Car ${this.id} successfully claimed space at distance ${minDistance.toFixed(2)}px from building entrance`);
+      } else {
+        console.warn(`⚠️ Space was claimed by another car while car ${this.id} was selecting. Trying again...`);
+        // Recursively try to find another space
+        this.findAndClaimClosestSpace(parkingLot);
+      }
+    }
   }
 
   startDriving(currentTime) {
@@ -144,9 +158,12 @@ export class Car {
     this.status = 'parked';
     this.parkingTime = currentTime;
     
-    // Park in the target space
+    // Space is already occupied from when we claimed it upon arrival
+    // Just update the car's position to the final position in the space
     if (this.targetSpace) {
-      this.park(this.targetSpace);
+      this.x = this.targetSpace.x + (this.targetSpace.width - this.width) / 2;
+      this.y = this.targetSpace.y + (this.targetSpace.height - this.height) / 2;
+      this.occupiedSpace = this.targetSpace; // Set the occupied space reference
     }
     
     // Start person's shopping process

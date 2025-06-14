@@ -5,8 +5,8 @@ export class Person {
   constructor() {
     this.id = Math.random().toString(36).substr(2, 9);
     this.car = null; // Associated car
-    this.walkSpeed = 2; // pixels per second - reasonable walking speed
-    this.lotSpeed = 1; // pixels per second - slower movement in parking lot
+    this.walkSpeed = 20; // pixels per second - reasonable walking speed
+    this.lotSpeed = 100; // pixels per second - slower movement in parking lot
     this.storeVisitTime = this.generateStoreVisitTime(); // in seconds
     this.totalWalkTime = 0; // time spent walking in seconds
     this.isInStore = false;
