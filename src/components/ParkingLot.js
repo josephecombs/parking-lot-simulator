@@ -79,7 +79,7 @@ const ParkingLot = ({ parkingLot }) => {
           className="building-entrance"
           style={{
             position: 'absolute',
-            left: buildingEntrance.x,
+            left: '50%',
             top: buildingEntrance.y,
             width: buildingEntrance.width,
             height: buildingEntrance.height,
@@ -98,7 +98,7 @@ const ParkingLot = ({ parkingLot }) => {
             width: 'auto',
             boxShadow: '0 2px 8px rgba(108,117,125,0.15)',
             zIndex: 2,
-            transform: 'translateY(-60%)',
+            transform: 'translateX(-50%) translateY(-60%)',
           }}
         >
           <span>BUILDING</span>
