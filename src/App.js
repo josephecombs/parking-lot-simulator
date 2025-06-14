@@ -109,25 +109,23 @@ function App() {
           <span>Available: {stats.availableSpaces}</span>
         </div>
       </header>
-      <main style={{ position: 'relative', minHeight: 600 }}>
+      <main style={{ 
+        display: 'flex', 
+        justifyContent: 'center', 
+        alignItems: 'flex-start', 
+        gap: '20px',
+        padding: '20px',
+        minHeight: 600 
+      }}>
         {/* Schedule Panel (left) */}
-        <div style={{ position: 'absolute', left: 0, top: 0, height: '100%', zIndex: 10 }}>
-          <SchedulePanel 
-            scheduledCars={simulationManager.getScheduledCars()} 
-            currentTime={time}
-            formatArrivalTime={simulationManager.formatArrivalTime}
-          />
-        </div>
-        {/* Completed Cars Panel (right) */}
-        <div style={{ position: 'absolute', right: 0, top: 0, height: '100%', zIndex: 10 }}>
-          <CompletedCarsPanel 
-            completedCars={simulationManager.getCompletedCars()} 
-            formatTime={formatTime}
-            formatArrivalTime={simulationManager.formatArrivalTime}
-          />
-        </div>
+        <SchedulePanel 
+          scheduledCars={simulationManager.getScheduledCars()} 
+          currentTime={time}
+          formatArrivalTime={simulationManager.formatArrivalTime}
+        />
+        
         {/* Parking Lot in the center */}
-        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: 600 }}>
+        <div style={{ position: 'relative' }}>
           <ParkingLotComponent 
             parkingLot={parkingLot} 
             cars={simulationManager.getCars()}
@@ -136,6 +134,14 @@ function App() {
             onCarLeave={() => setHoveredCarInfo(null)}
           />
         </div>
+        
+        {/* Completed Cars Panel (right) */}
+        <CompletedCarsPanel 
+          completedCars={simulationManager.getCompletedCars()} 
+          formatTime={formatTime}
+          formatArrivalTime={simulationManager.formatArrivalTime}
+        />
+        
         {/* Optionally, show hovered car info as a floating tooltip */}
         {hoveredCarInfo && (
           <div style={{

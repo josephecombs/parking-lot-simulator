@@ -19,11 +19,8 @@ const CompletedCarsPanel = ({ completedCars, formatTime, formatArrivalTime }) =>
 
   return (
     <div className="completed-cars-panel" style={{
-      position: 'absolute',
-      right: '-320px',
-      top: '0',
       width: '300px',
-      height: '100%',
+      height: '500px',
       backgroundColor: '#f8f9fa',
       border: '2px solid #dee2e6',
       borderRadius: '8px',
