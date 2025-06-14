@@ -1,8 +1,5 @@
-Now that we have the parking lot rendering and it looks reasonable from the top down. I need you to create a "Car" model. Cars should be randomly colored and be rectangles slightly smaller than the size of a space.
+Now we have Car, Person and a better start/stop simulator, we are ready to do the next step - the "schedule". when the page is loaded, create a "stack" of cars and persons and give each car an arrivetime. Assume this store will have 80 cars arrive in the hour at random times between 0 and 45 minutes. display this stack to the left of the lot somehow with some indication of the time they'll arrive 
 
-Spaces can have exactly ONE car at any given TIME.
+to the RIGHT, store a similar representation of the cars that have already arrived, shopped, and exited. let me mousehover over a car that's out and know information about the occupant
 
-Then, create a PERSON model, associated with each car. for now assume one person for one car. track walk-time for each person as time spent walking from car to building entrance and back
-Each person has a "store visit" time randomly chosen between 2 and 15 minutes.
-
-Additionally, we need a better concept of time. What we need to simulate is an entire hour - 60 minutes of 60 seconds each. so really the timer needs to be 3600 seconds.
+use some unicode character to indicate which cars are where. and color the cars appropriately if possible.

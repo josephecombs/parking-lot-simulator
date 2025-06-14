@@ -2,7 +2,7 @@
  * Car - Model representing a car in the parking lot
  */
 export class Car {
-  constructor() {
+  constructor(arrivalTime = null) {
     this.id = Math.random().toString(36).substr(2, 9);
     this.color = this.generateRandomColor();
     this.width = 28; // Slightly smaller than space width (32px)
@@ -11,6 +11,12 @@ export class Car {
     this.y = 0;
     this.occupiedSpace = null;
     this.person = null; // Associated person
+    this.arrivalTime = arrivalTime; // Time in seconds when car should arrive
+    this.status = 'scheduled'; // 'scheduled', 'arrived', 'parked', 'shopping', 'exited'
+    this.actualArrivalTime = null;
+    this.parkingTime = null;
+    this.exitTime = null;
+    this.unicodeChar = this.generateUnicodeChar();
   }
 
   generateRandomColor() {
@@ -23,6 +29,12 @@ export class Car {
     return colors[Math.floor(Math.random() * colors.length)];
   }
 
+  generateUnicodeChar() {
+    // Car-related unicode characters
+    const carChars = ['🚗', '🚙', '🚕', '🚓', '🚑', '🚒', '🚐', '🚚', '🚛', '🚜'];
+    return carChars[Math.floor(Math.random() * carChars.length)];
+  }
+
   park(space) {
     if (space && space.isAvailable()) {
       this.occupiedSpace = space;
@@ -31,6 +43,9 @@ export class Car {
       // Position car in the center of the space
       this.x = space.x + (space.width - this.width) / 2;
       this.y = space.y + (space.height - this.height) / 2;
+      
+      this.status = 'parked';
+      this.parkingTime = Date.now();
       
       return true;
     }
@@ -42,6 +57,17 @@ export class Car {
       this.occupiedSpace.vacate();
       this.occupiedSpace = null;
     }
+    this.status = 'exited';
+    this.exitTime = Date.now();
+  }
+
+  arrive(currentTime) {
+    this.status = 'arrived';
+    this.actualArrivalTime = currentTime;
+  }
+
+  startShopping() {
+    this.status = 'shopping';
   }
 
   getPosition() {
@@ -58,5 +84,40 @@ export class Car {
 
   getPerson() {
     return this.person;
+  }
+
+  getArrivalTime() {
+    return this.arrivalTime;
+  }
+
+  getStatus() {
+    return this.status;
+  }
+
+  getUnicodeChar() {
+    return this.unicodeChar;
+  }
+
+  getCarInfo() {
+    const person = this.getPerson();
+    return {
+      id: this.id,
+      color: this.color,
+      unicodeChar: this.unicodeChar,
+      status: this.status,
+      arrivalTime: this.arrivalTime,
+      actualArrivalTime: this.actualArrivalTime,
+      parkingTime: this.parkingTime,
+      exitTime: this.exitTime,
+      person: person ? {
+        id: person.id,
+        walkSpeed: person.getWalkSpeed(),
+        lotSpeed: person.getLotSpeed(),
+        storeVisitTime: person.getStoreVisitTime(),
+        totalWalkTime: person.getTotalWalkTime(),
+        isInStore: person.isCurrentlyInStore(),
+        isWalking: person.isCurrentlyWalking()
+      } : null
+    };
   }
 } 

@@ -2,7 +2,7 @@ import React from 'react';
 import ParkingLotSpace from './ParkingLotSpace';
 import '../styles/ParkingLot.css';
 
-const ParkingLot = ({ parkingLot, cars = [], time = 0 }) => {
+const ParkingLot = ({ parkingLot, cars = [], time = 0, onCarHover, onCarLeave }) => {
   const { width, height, entrance, exit, buildingEntrance, spaces } = parkingLot;
 
   return (
@@ -107,8 +107,36 @@ const ParkingLot = ({ parkingLot, cars = [], time = 0 }) => {
           <ParkingLotSpace key={index} space={space} isLast={index === spaces.length - 1} />
         ))}
 
-        {/* Cars will be rendered here in the next step */}
-        {/* For now, we're just setting up the infrastructure */}
+        {/* Render cars as unicode characters */}
+        {cars.map((car) => {
+          const pos = car.getPosition();
+          return (
+            <div
+              key={car.id}
+              style={{
+                position: 'absolute',
+                left: pos.x,
+                top: pos.y,
+                width: car.width,
+                height: car.height,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                fontSize: '28px',
+                color: car.color,
+                cursor: 'pointer',
+                zIndex: 200,
+                transition: 'box-shadow 0.2s',
+                boxShadow: '0 2px 8px rgba(0,0,0,0.15)'
+              }}
+              onMouseEnter={() => onCarHover && onCarHover(car.getCarInfo())}
+              onMouseLeave={() => onCarLeave && onCarLeave()}
+              title={`Car #${car.id}`}
+            >
+              {car.getUnicodeChar()}
+            </div>
+          );
+        })}
       </div>
     </div>
   );

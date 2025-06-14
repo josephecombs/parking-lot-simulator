@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { ParkingLot } from './models/ParkingLot';
 import { SimulationManager } from './models/SimulationManager';
 import ParkingLotComponent from './components/ParkingLot';
+import SchedulePanel from './components/SchedulePanel';
+import CompletedCarsPanel from './components/CompletedCarsPanel';
 import './App.css';
 
 function App() {
@@ -9,6 +11,7 @@ function App() {
   const [simulationManager] = useState(() => new SimulationManager(parkingLot));
   const [time, setTime] = useState(0);
   const [isSimulationRunning, setIsSimulationRunning] = useState(false);
+  const [hoveredCarInfo, setHoveredCarInfo] = useState(null);
 
   // Total simulation time: 3600 seconds (1 hour)
   const TOTAL_SIMULATION_TIME = 3600;
@@ -62,7 +65,7 @@ function App() {
   const stats = simulationManager.getSimulationStats();
 
   return (
-    <div className="App">
+    <div className="App" style={{ position: 'relative' }}>
       <header className="App-header">
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 24 }}>
           <h1 style={{ margin: 0 }}>Parking Lot Simulator</h1>
@@ -106,12 +109,66 @@ function App() {
           <span>Available: {stats.availableSpaces}</span>
         </div>
       </header>
-      <main>
-        <ParkingLotComponent 
-          parkingLot={parkingLot} 
-          cars={simulationManager.getCars()}
-          time={time}
-        />
+      <main style={{ position: 'relative', minHeight: 600 }}>
+        {/* Schedule Panel (left) */}
+        <div style={{ position: 'absolute', left: 0, top: 0, height: '100%', zIndex: 10 }}>
+          <SchedulePanel 
+            scheduledCars={simulationManager.getScheduledCars()} 
+            currentTime={time}
+            formatArrivalTime={simulationManager.formatArrivalTime}
+          />
+        </div>
+        {/* Completed Cars Panel (right) */}
+        <div style={{ position: 'absolute', right: 0, top: 0, height: '100%', zIndex: 10 }}>
+          <CompletedCarsPanel 
+            completedCars={simulationManager.getCompletedCars()} 
+            formatTime={formatTime}
+            formatArrivalTime={simulationManager.formatArrivalTime}
+          />
+        </div>
+        {/* Parking Lot in the center */}
+        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: 600 }}>
+          <ParkingLotComponent 
+            parkingLot={parkingLot} 
+            cars={simulationManager.getCars()}
+            time={time}
+            onCarHover={setHoveredCarInfo}
+            onCarLeave={() => setHoveredCarInfo(null)}
+          />
+        </div>
+        {/* Optionally, show hovered car info as a floating tooltip */}
+        {hoveredCarInfo && (
+          <div style={{
+            position: 'fixed',
+            left: '50%',
+            top: '10%',
+            transform: 'translateX(-50%)',
+            backgroundColor: '#212529',
+            color: 'white',
+            padding: '16px',
+            borderRadius: '8px',
+            fontSize: '14px',
+            zIndex: 10000,
+            boxShadow: '0 4px 12px rgba(0,0,0,0.3)'
+          }}>
+            <div style={{ fontWeight: 'bold', marginBottom: '8px' }}>
+              Car {hoveredCarInfo.unicodeChar}
+            </div>
+            <div>ID: {hoveredCarInfo.id}</div>
+            <div>Status: {hoveredCarInfo.status}</div>
+            <div>Arrival: {simulationManager.formatArrivalTime(hoveredCarInfo.arrivalTime)}</div>
+            {hoveredCarInfo.person && (
+              <>
+                <div style={{ marginTop: '8px', fontWeight: 'bold' }}>
+                  Person Info:
+                </div>
+                <div>Walk Speed: {hoveredCarInfo.person.walkSpeed} px/s</div>
+                <div>Lot Speed: {hoveredCarInfo.person.lotSpeed} px/s</div>
+                <div>Store Visit: {Math.floor(hoveredCarInfo.person.storeVisitTime / 60)}m {hoveredCarInfo.person.storeVisitTime % 60}s</div>
+              </>
+            )}
+          </div>
+        )}
       </main>
     </div>
   );
