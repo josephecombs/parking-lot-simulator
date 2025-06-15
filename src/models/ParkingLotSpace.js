@@ -85,7 +85,7 @@ export class ParkingLotSpace {
   // Get occupancy percentage for a given time period
   getOccupancyPercentage(currentTime = 0, totalTime = 3600) {
     const stats = this.getOccupancyStats(currentTime);
-    return totalTime > 0 ? (stats.totalOccupiedTime / totalTime) * 100 : 0;
+    return currentTime > 0 ? (stats.totalOccupiedTime / currentTime) * 100 : 0;
   }
 
   // Format time for display
