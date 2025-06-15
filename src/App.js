@@ -95,6 +95,8 @@ const cloneCar = (originalCar) => {
   
   // Copy all the properties from the original car
   clonedCar.id = originalCar.id;
+  clonedCar.color = originalCar.color;
+  clonedCar.unicodeChar = originalCar.unicodeChar;
   clonedCar.status = originalCar.status;
   clonedCar.arrivalTime = originalCar.arrivalTime;
   clonedCar.parkingTime = originalCar.parkingTime;
