@@ -1,12 +1,129 @@
 import React, { useState, useEffect } from 'react';
 import { ParkingLot } from './models/ParkingLot';
 import { SimulationManager } from './models/SimulationManager';
+import { Car } from './models/Car';
+import { Person } from './models/Person';
 import ParkingLotComponent from './components/ParkingLot';
 import SchedulePanel from './components/SchedulePanel';
 import CompletedCarsPanel from './components/CompletedCarsPanel';
 import './App.css';
 
+// Shared schedule generator to ensure both simulations get identical schedules
+const generateSharedSchedule = () => {
+  const numCars = 80;
+  const maxArrivalTime = 45 * 60; // 45 minutes in seconds
+  const scheduledCars = [];
+  
+  console.log(`🚗 Generating SHARED schedule for ${numCars} cars...`);
+  console.log(`⏰ Cars will arrive between 00:00 and ${formatArrivalTime(maxArrivalTime)}`);
+  
+  for (let i = 0; i < numCars; i++) {
+    // Ensure the first car arrives at t=0
+    const arrivalTime = i === 0 ? 0 : Math.floor(Math.random() * maxArrivalTime);
+    const car = new Car(arrivalTime);
+    const person = new Person();
+    
+    // Associate car and person
+    person.setCar(car);
+    
+    scheduledCars.push({ car, person });
+  }
+  
+  // Sort scheduled cars by arrival time
+  scheduledCars.sort((a, b) => a.car.getArrivalTime() - b.car.getArrivalTime());
+  
+  // Log the complete schedule
+  console.log('📅 Complete SHARED Car Schedule:');
+  console.log('Time | Car ID | Unicode | Person Store Visit');
+  console.log('-----|--------|---------|------------------');
+  
+  scheduledCars.forEach(({ car, person }, index) => {
+    const arrivalTime = formatArrivalTime(car.getArrivalTime());
+    const storeVisitMinutes = Math.floor(person.getStoreVisitTime() / 60);
+    const storeVisitSeconds = person.getStoreVisitTime() % 60;
+    console.log(
+      `${arrivalTime} | ${car.id.substring(0, 6)}... | ${car.getUnicodeChar()} | ${storeVisitMinutes}m ${storeVisitSeconds}s`
+    );
+  });
+  
+  console.log(`✅ SHARED Schedule generated successfully! ${scheduledCars.length} cars scheduled.`);
+  console.log('First 5 cars to arrive:', scheduledCars.slice(0, 5).map(({ car }) => ({
+    time: formatArrivalTime(car.getArrivalTime()),
+    unicode: car.getUnicodeChar(),
+    id: car.id.substring(0, 6)
+  })));
+  
+  return scheduledCars;
+};
+
+// Function to clone a Person object with all its properties
+const clonePerson = (originalPerson) => {
+  const clonedPerson = new Person();
+  
+  // Copy all the properties from the original person
+  clonedPerson.id = originalPerson.id;
+  clonedPerson.handicapped = originalPerson.handicapped;
+  clonedPerson.walkSpeed = originalPerson.walkSpeed;
+  clonedPerson.lotSpeed = originalPerson.lotSpeed;
+  clonedPerson.storeVisitTime = originalPerson.storeVisitTime;
+  clonedPerson.isInStore = originalPerson.isInStore;
+  clonedPerson.isWalking = originalPerson.isWalking;
+  clonedPerson.storeEntryTime = originalPerson.storeEntryTime;
+  clonedPerson.storeExitTime = originalPerson.storeExitTime;
+  clonedPerson.shoppingCompleteTime = originalPerson.shoppingCompleteTime;
+  clonedPerson.hasCompletedShopping = originalPerson.hasCompletedShopping;
+  clonedPerson.totalDrivingTime = originalPerson.totalDrivingTime;
+  clonedPerson.totalAccumulatedWalkTime = originalPerson.totalAccumulatedWalkTime;
+  clonedPerson.x = originalPerson.x;
+  clonedPerson.y = originalPerson.y;
+  clonedPerson.startX = originalPerson.startX;
+  clonedPerson.startY = originalPerson.startY;
+  clonedPerson.targetX = originalPerson.targetX;
+  clonedPerson.targetY = originalPerson.targetY;
+  clonedPerson.walkStartTime = originalPerson.walkStartTime;
+  clonedPerson.totalWalkTime = originalPerson.totalWalkTime;
+  clonedPerson.isWalkingToStore = originalPerson.isWalkingToStore;
+  clonedPerson.isWalkingToCar = originalPerson.isWalkingToCar;
+  clonedPerson.walkCompleteTime = originalPerson.walkCompleteTime;
+  
+  return clonedPerson;
+};
+
+// Function to clone a Car object with all its properties
+const cloneCar = (originalCar) => {
+  const clonedCar = new Car(originalCar.getArrivalTime());
+  
+  // Copy all the properties from the original car
+  clonedCar.id = originalCar.id;
+  clonedCar.status = originalCar.status;
+  clonedCar.arrivalTime = originalCar.arrivalTime;
+  clonedCar.parkingTime = originalCar.parkingTime;
+  clonedCar.exitTime = originalCar.exitTime;
+  clonedCar.x = originalCar.x;
+  clonedCar.y = originalCar.y;
+  clonedCar.targetX = originalCar.targetX;
+  clonedCar.targetY = originalCar.targetY;
+  clonedCar.startX = originalCar.startX;
+  clonedCar.startY = originalCar.startY;
+  clonedCar.moveStartTime = originalCar.moveStartTime;
+  clonedCar.moveDuration = originalCar.moveDuration;
+  clonedCar.parkingLot = originalCar.parkingLot;
+  clonedCar.parkingSpace = originalCar.parkingSpace;
+  clonedCar.person = originalCar.person;
+  
+  return clonedCar;
+};
+
+const formatArrivalTime = (seconds) => {
+  const minutes = Math.floor(seconds / 60);
+  const secs = seconds % 60;
+  return `${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+};
+
 function App() {
+  // Generate the shared schedule once
+  const [sharedSchedule] = useState(() => generateSharedSchedule());
+  
   // Create two parking lots - one with handicapped spaces, one without
   const [parkingLotWithHandicapped] = useState(() => new ParkingLot(1000, 500));
   const [parkingLotWithoutHandicapped] = useState(() => {
@@ -18,9 +135,36 @@ function App() {
     return lot;
   });
   
-  // Create two simulation managers with the same schedule
-  const [simulationManagerWithHandicapped] = useState(() => new SimulationManager(parkingLotWithHandicapped));
-  const [simulationManagerWithoutHandicapped] = useState(() => new SimulationManager(parkingLotWithoutHandicapped));
+  // Create two simulation managers with the SHARED schedule
+  const [simulationManagerWithHandicapped] = useState(() => {
+    const manager = new SimulationManager(parkingLotWithHandicapped);
+    // Replace the generated schedule with our shared schedule - clone everything exactly
+    manager.scheduledCars = sharedSchedule.map(({ car, person }) => {
+      const clonedCar = cloneCar(car);
+      const clonedPerson = clonePerson(person);
+      
+      // Associate the cloned car and person
+      clonedPerson.setCar(clonedCar);
+      
+      return { car: clonedCar, person: clonedPerson };
+    });
+    return manager;
+  });
+  
+  const [simulationManagerWithoutHandicapped] = useState(() => {
+    const manager = new SimulationManager(parkingLotWithoutHandicapped);
+    // Replace the generated schedule with our shared schedule - clone everything exactly
+    manager.scheduledCars = sharedSchedule.map(({ car, person }) => {
+      const clonedCar = cloneCar(car);
+      const clonedPerson = clonePerson(person);
+      
+      // Associate the cloned car and person
+      clonedPerson.setCar(clonedCar);
+      
+      return { car: clonedCar, person: clonedPerson };
+    });
+    return manager;
+  });
   
   // State to track which simulation is visible
   const [isHandicappedMode, setIsHandicappedMode] = useState(true);
