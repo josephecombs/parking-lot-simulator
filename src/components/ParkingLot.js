@@ -95,11 +95,14 @@ const ParkingLot = ({ parkingLot, cars = [], time = 0, onCarHover, onCarLeave })
           style={{
             position: 'absolute',
             right: 0,
-            top: exit.y,
-            height: exit.height,
+            top: '50%',
+            transform: 'translateY(-50%)',
             backgroundColor: '#dc3545',
             border: '2px solid #c82333',
-            borderRadius: '6px',
+            borderTopRightRadius: 0,
+            borderBottomRightRadius: 0,
+            borderTopLeftRadius: '6px',
+            borderBottomLeftRadius: '6px',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
@@ -107,10 +110,11 @@ const ParkingLot = ({ parkingLot, cars = [], time = 0, onCarHover, onCarLeave })
             fontSize: '1.1rem',
             fontWeight: 'bold',
             letterSpacing: '1px',
-            padding: '0 16px',
             width: 'auto',
             boxShadow: '0 2px 8px rgba(220,53,69,0.15)',
             overflow: 'visible',
+            writingMode: 'vertical-rl',
+            textOrientation: 'upright',
           }}
         >
           EXIT
