@@ -326,7 +326,8 @@ export class Car {
         totalDrivingTime: person.getTotalDrivingTime(),
         drivingTimeFormatted: person.getDrivingTimeFormatted(),
         isInStore: person.isCurrentlyInStore(),
-        isWalking: person.isCurrentlyWalking()
+        isWalking: person.isCurrentlyWalking(),
+        handicapped: person.isHandicapped()
       } : null
     };
   }

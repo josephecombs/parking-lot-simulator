@@ -5,7 +5,14 @@ export class Person {
   constructor() {
     this.id = Math.random().toString(36).substr(2, 9);
     this.car = null; // Associated car
-    this.walkSpeed = 20; // pixels per second - reasonable walking speed
+    
+    // Determine if person is handicapped (12% probability)
+    this.handicapped = Math.random() < 0.12 ? true : false;
+    
+    // Set walk speed based on handicapped status
+    const baseWalkSpeed = 20; // pixels per second - reasonable walking speed
+    this.walkSpeed = this.handicapped ? baseWalkSpeed / 2 : baseWalkSpeed;
+    
     this.lotSpeed = 100; // pixels per second - slower movement in parking lot
     this.storeVisitTime = this.generateStoreVisitTime(); // in seconds
     this.isInStore = false;
@@ -255,5 +262,10 @@ export class Person {
     const minutes = Math.floor(this.totalDrivingTime / 60);
     const seconds = this.totalDrivingTime % 60;
     return `${minutes}m ${seconds}s`;
+  }
+
+  // Handicapped status methods
+  isHandicapped() {
+    return this.handicapped;
   }
 } 
