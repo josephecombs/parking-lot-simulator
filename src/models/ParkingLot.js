@@ -37,7 +37,7 @@ export class ParkingLot {
     const borderWidth = 1;
     const totalRowWidth = numSpaces * spaceWidth;
     const startX = (this.width - totalRowWidth) / 2;
-    const y = 60; // Increased buffer from 10 to 60 pixels for more space
+    const y = 60; // Buffer from building entrance to top row of spaces
 
     // Midpoint of the building entrance (top edge)
     const buildingMidX = this.buildingEntrance.x + this.buildingEntrance.width / 2;

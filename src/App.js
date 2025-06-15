@@ -31,7 +31,7 @@ function App() {
           }
           return newTime;
         });
-      }, 250); // 0.25 seconds per tick for 4x realtime simulation
+      }, 125); // 0.125 seconds per tick for 8x realtime simulation
     }
     return () => clearInterval(interval);
   }, [isSimulationRunning, time, simulationManager]);

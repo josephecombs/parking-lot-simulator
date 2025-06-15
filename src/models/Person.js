@@ -168,7 +168,6 @@ export class Person {
   updateShopping(currentTime) {
     if (this.isInStore && currentTime >= this.shoppingCompleteTime && !this.hasCompletedShopping) {
       this.exitStore(currentTime);
-      this.stopWalking(currentTime);
       
       // Signal to car that shopping is complete
       if (this.car) {
