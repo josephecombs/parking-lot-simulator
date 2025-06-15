@@ -12,7 +12,7 @@ function App() {
   const [time, setTime] = useState(0);
   const [isSimulationRunning, setIsSimulationRunning] = useState(false);
   const [hoveredCarInfo, setHoveredCarInfo] = useState(null);
-  const [simulationSpeed, setSimulationSpeed] = useState(8); // Default 8x
+  const [simulationSpeed, setSimulationSpeed] = useState(32); // Default 32x
 
   // Total simulation time: 3600 seconds (1 hour)
   const TOTAL_SIMULATION_TIME = 3600;
@@ -25,6 +25,15 @@ function App() {
     16: 62.5,
     32: 31.25,
   };
+
+  useEffect(() => {
+    // Start simulation automatically on mount
+    setTime(0);
+    simulationManager.setCurrentTime(0);
+    setIsSimulationRunning(true);
+    simulationManager.startSimulation();
+    // eslint-disable-next-line
+  }, []);
 
   useEffect(() => {
     let interval;
