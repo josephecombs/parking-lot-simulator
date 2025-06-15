@@ -7,6 +7,39 @@ const About = () => {
     <div className="about-container">
       <div className="about-content">
         <header className="about-header">
+          <div style={{ 
+            position: 'absolute', 
+            top: '20px', 
+            left: '20px',
+            zIndex: 10
+          }}>
+            <Link 
+              to="/" 
+              style={{
+                color: 'rgba(255,255,255,0.8)',
+                textDecoration: 'none',
+                fontSize: '14px',
+                fontWeight: '500',
+                padding: '8px 16px',
+                borderRadius: '8px',
+                border: '1px solid rgba(255,255,255,0.3)',
+                transition: 'all 0.3s ease',
+                display: 'inline-block'
+              }}
+              onMouseEnter={(e) => {
+                e.target.style.background = 'rgba(255,255,255,0.1)';
+                e.target.style.color = 'rgba(255,255,255,1)';
+                e.target.style.transform = 'translateY(-1px)';
+              }}
+              onMouseLeave={(e) => {
+                e.target.style.background = 'transparent';
+                e.target.style.color = 'rgba(255,255,255,0.8)';
+                e.target.style.transform = 'translateY(0)';
+              }}
+            >
+              ← Back to Simulator
+            </Link>
+          </div>
           <h1>About Parking Lot Simulator</h1>
           <p className="subtitle">Exploring the economics of accessibility in urban planning</p>
         </header>
