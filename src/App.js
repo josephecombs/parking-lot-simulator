@@ -414,17 +414,16 @@ function App() {
             textAlign: 'right',
             flex: 1
           }}>
-            <div style={{ fontWeight: 'bold', fontSize: 17, color: '#2e3a4d' }}>
-              🚶‍♂️ Walk & 🚗 Drive Summary:
-            </div>
-            <div>
+            {/* <div>
               <span style={{ fontWeight: 500, color: '#fff' }}>Total Walk Time:</span> {completedStats.formatted.totalWalk}
             </div>
             <div>
               <span style={{ fontWeight: 500, color: '#fff' }}>Total Drive Time:</span> {completedStats.formatted.totalDrive}
-            </div>
+            </div> */}
             <div style={{ marginTop: 8, fontWeight: 600, color: '#ffd700', fontSize: 16 }}>
-              Lot Occupancy: {lotOccupancyPercent}%
+            <div style={{ fontWeight: 'bold', fontSize: 17, color: '#2e3a4d' }}>
+              🚶‍♂️ Walk & 🚗 Drive Summary:
+            </div>Lot Occupancy: {lotOccupancyPercent}%
             </div>
             <div style={{ 
               marginTop: 12, 
@@ -436,11 +435,11 @@ function App() {
               <div style={{ fontWeight: 'bold', fontSize: 15, color: '#ffd700', marginBottom: 4 }}>
                 ♿ Handicapped Space Cost:
               </div>
-              <div style={{ fontSize: 13, color: walkTimeCost > 0 ? '#ff6b6b' : '#4ecdc4' }}>
-                Walk Time: +{walkTimeCostFormatted}
+              <div style={{ fontSize: 13, color: '#fff' }}>
+                Walk Time: {handicappedStats.formatted.totalWalk} (♿) vs {nonHandicappedStats.formatted.totalWalk} (🚗)
               </div>
-              <div style={{ fontSize: 13, color: driveTimeCost > 0 ? '#ff6b6b' : '#4ecdc4' }}>
-                Drive Time: +{driveTimeCostFormatted}
+              <div style={{ fontSize: 13, color: '#fff' }}>
+                Drive Time: {handicappedStats.formatted.totalDrive} (♿) vs {nonHandicappedStats.formatted.totalDrive} (🚗)
               </div>
             </div>
           </div>

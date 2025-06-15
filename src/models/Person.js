@@ -11,7 +11,10 @@ export class Person {
     
     // Set walk speed based on handicapped status
     const baseWalkSpeed = 20; // pixels per second - reasonable walking speed
-    this.walkSpeed = this.handicapped ? baseWalkSpeed / 2 : baseWalkSpeed;
+
+    // THIS IS FUNDAMENTAL CONSTRAINT TO ENTIRE WELFARE ANALYSIS!!! 
+    // HOW MUCH SLOWER DO THE HANDICAPPED ACTUALLY WALK?
+    this.walkSpeed = this.handicapped ? baseWalkSpeed : baseWalkSpeed;
     
     this.lotSpeed = 100; // pixels per second - slower movement in parking lot
     this.storeVisitTime = this.generateStoreVisitTime(); // in seconds
