@@ -22,12 +22,12 @@ function App() {
   const [simulationManagerWithHandicapped] = useState(() => new SimulationManager(parkingLotWithHandicapped));
   const [simulationManagerWithoutHandicapped] = useState(() => new SimulationManager(parkingLotWithoutHandicapped));
   
-  // State to track which simulation is active
+  // State to track which simulation is visible
   const [isHandicappedMode, setIsHandicappedMode] = useState(true);
   
-  // Use the active simulation manager based on the mode
-  const activeSimulationManager = isHandicappedMode ? simulationManagerWithHandicapped : simulationManagerWithoutHandicapped;
-  const activeParkingLot = isHandicappedMode ? parkingLotWithHandicapped : parkingLotWithoutHandicapped;
+  // Use the visible simulation manager based on the mode
+  const visibleSimulationManager = isHandicappedMode ? simulationManagerWithHandicapped : simulationManagerWithoutHandicapped;
+  const visibleParkingLot = isHandicappedMode ? parkingLotWithHandicapped : parkingLotWithoutHandicapped;
   
   const [time, setTime] = useState(0);
   const [isSimulationRunning, setIsSimulationRunning] = useState(false);
@@ -47,13 +47,15 @@ function App() {
   };
 
   useEffect(() => {
-    // Start simulation automatically on mount
+    // Start both simulations automatically on mount
     setTime(0);
-    activeSimulationManager.setCurrentTime(0);
+    simulationManagerWithHandicapped.setCurrentTime(0);
+    simulationManagerWithoutHandicapped.setCurrentTime(0);
     setIsSimulationRunning(true);
-    activeSimulationManager.startSimulation();
+    simulationManagerWithHandicapped.startSimulation();
+    simulationManagerWithoutHandicapped.startSimulation();
     // eslint-disable-next-line
-  }, [isHandicappedMode]);
+  }, []);
 
   useEffect(() => {
     let interval;
@@ -61,11 +63,14 @@ function App() {
       interval = setInterval(() => {
         setTime((prev) => {
           const newTime = prev + 1;
-          activeSimulationManager.setCurrentTime(newTime);
+          // Update both simulations in parallel
+          simulationManagerWithHandicapped.setCurrentTime(newTime);
+          simulationManagerWithoutHandicapped.setCurrentTime(newTime);
           
           if (newTime >= TOTAL_SIMULATION_TIME) {
             setIsSimulationRunning(false);
-            activeSimulationManager.pauseSimulation();
+            simulationManagerWithHandicapped.pauseSimulation();
+            simulationManagerWithoutHandicapped.pauseSimulation();
             return TOTAL_SIMULATION_TIME;
           }
           return newTime;
@@ -73,25 +78,30 @@ function App() {
       }, speedToInterval[simulationSpeed]);
     }
     return () => clearInterval(interval);
-  }, [isSimulationRunning, time, activeSimulationManager, simulationSpeed]);
+  }, [isSimulationRunning, time, simulationManagerWithHandicapped, simulationManagerWithoutHandicapped, simulationSpeed]);
 
   const startSimulation = () => {
     setTime(0);
-    activeSimulationManager.setCurrentTime(0);
+    simulationManagerWithHandicapped.setCurrentTime(0);
+    simulationManagerWithoutHandicapped.setCurrentTime(0);
     setIsSimulationRunning(true);
-    activeSimulationManager.startSimulation();
+    simulationManagerWithHandicapped.startSimulation();
+    simulationManagerWithoutHandicapped.startSimulation();
   };
 
   const pauseSimulation = () => {
     setIsSimulationRunning(false);
-    activeSimulationManager.pauseSimulation();
+    simulationManagerWithHandicapped.pauseSimulation();
+    simulationManagerWithoutHandicapped.pauseSimulation();
   };
 
   const resetSimulation = () => {
     setTime(0);
-    activeSimulationManager.setCurrentTime(0);
+    simulationManagerWithHandicapped.setCurrentTime(0);
+    simulationManagerWithoutHandicapped.setCurrentTime(0);
     setIsSimulationRunning(false);
-    activeSimulationManager.resetSimulation();
+    simulationManagerWithHandicapped.resetSimulation();
+    simulationManagerWithoutHandicapped.resetSimulation();
   };
 
   const toggleHandicappedMode = () => {
@@ -105,9 +115,9 @@ function App() {
     return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
   };
 
-  const stats = activeSimulationManager.getSimulationStats();
-  const completedStats = activeSimulationManager.getCompletedSummaryStats();
-  const lotOccupancyPercent = activeParkingLot.getAverageOccupancyPercentage(time, TOTAL_SIMULATION_TIME).toFixed(1);
+  const stats = visibleSimulationManager.getSimulationStats();
+  const completedStats = visibleSimulationManager.getCompletedSummaryStats();
+  const lotOccupancyPercent = visibleParkingLot.getAverageOccupancyPercentage(time, TOTAL_SIMULATION_TIME).toFixed(1);
 
   return (
     <div className="App" style={{ position: 'relative' }}>
@@ -222,7 +232,7 @@ function App() {
               ) : (
                 <>
                   <span style={{ fontSize: '20px' }}>🚗</span>
-                  Show "Handicapped Space"
+                  Show "Handicapped Space" Simulation
                 </>
               )}
             </button>
@@ -263,16 +273,16 @@ function App() {
       }}>
         {/* Schedule Panel (left) */}
         <SchedulePanel 
-          scheduledCars={activeSimulationManager.getScheduledCars()} 
+          scheduledCars={visibleSimulationManager.getScheduledCars()} 
           currentTime={time}
-          formatArrivalTime={activeSimulationManager.formatArrivalTime}
+          formatArrivalTime={visibleSimulationManager.formatArrivalTime}
         />
         
         {/* Parking Lot in the center */}
         <div style={{ position: 'relative' }}>
           <ParkingLotComponent 
-            parkingLot={activeParkingLot} 
-            cars={activeSimulationManager.getCars()}
+            parkingLot={visibleParkingLot} 
+            cars={visibleSimulationManager.getCars()}
             time={time}
             onCarHover={setHoveredCarInfo}
             onCarLeave={() => setHoveredCarInfo(null)}
@@ -281,9 +291,9 @@ function App() {
         
         {/* Completed Cars Panel (right) */}
         <CompletedCarsPanel 
-          completedCars={activeSimulationManager.getCompletedCars()} 
+          completedCars={visibleSimulationManager.getCompletedCars()} 
           formatTime={formatTime}
-          formatArrivalTime={activeSimulationManager.formatArrivalTime}
+          formatArrivalTime={visibleSimulationManager.formatArrivalTime}
         />
                 
         {/* Optionally, show hovered car info as a floating tooltip */}
@@ -306,7 +316,7 @@ function App() {
             </div>
             <div>ID: {hoveredCarInfo.id}</div>
             <div>Status: {hoveredCarInfo.status}</div>
-            <div>Arrival: {activeSimulationManager.formatArrivalTime(hoveredCarInfo.arrivalTime)}</div>
+            <div>Arrival: {visibleSimulationManager.formatArrivalTime(hoveredCarInfo.arrivalTime)}</div>
             {hoveredCarInfo.person && (
               <>
                 <div style={{ marginTop: '8px', fontWeight: 'bold' }}>
