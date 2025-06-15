@@ -18,6 +18,9 @@ export class Person {
     // Driving time tracking
     this.totalDrivingTime = 0; // Total time spent driving in seconds
     
+    // Walking time tracking
+    this.totalAccumulatedWalkTime = 0; // Total time spent walking across all walks
+    
     // Walking position tracking
     this.x = 0;
     this.y = 0;
@@ -76,6 +79,7 @@ export class Person {
     
     // Calculate walk time based on walk speed
     this.totalWalkTime = totalDistance / this.walkSpeed;
+    this.totalAccumulatedWalkTime += this.totalWalkTime; // Add to total accumulated time
     this.walkCompleteTime = currentTime + this.totalWalkTime;
     
     console.log(`Person ${this.id} starting walk to store: distance=${totalDistance.toFixed(2)}px, speed=${this.walkSpeed}px/s, time=${this.totalWalkTime.toFixed(2)}s`);
@@ -101,6 +105,7 @@ export class Person {
     
     // Calculate walk time based on walk speed
     this.totalWalkTime = totalDistance / this.walkSpeed;
+    this.totalAccumulatedWalkTime += this.totalWalkTime; // Add to total accumulated time
     this.walkCompleteTime = currentTime + this.totalWalkTime;
     
     console.log(`Person ${this.id} starting walk to car: distance=${totalDistance.toFixed(2)}px, speed=${this.walkSpeed}px/s, time=${this.totalWalkTime.toFixed(2)}s`);
@@ -193,6 +198,16 @@ export class Person {
 
   getTotalWalkTime() {
     return this.totalWalkTime;
+  }
+
+  getTotalAccumulatedWalkTime() {
+    return this.totalAccumulatedWalkTime;
+  }
+
+  getAccumulatedWalkTimeFormatted() {
+    const minutes = Math.floor(this.totalAccumulatedWalkTime / 60);
+    const seconds = this.totalAccumulatedWalkTime % 60;
+    return `${minutes}m ${seconds}s`;
   }
 
   isCurrentlyInStore() {

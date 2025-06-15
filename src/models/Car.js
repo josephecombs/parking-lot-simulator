@@ -321,6 +321,8 @@ export class Car {
         lotSpeed: person.getLotSpeed(),
         storeVisitTime: person.getStoreVisitTime(),
         totalWalkTime: person.getTotalWalkTime(),
+        totalAccumulatedWalkTime: person.getTotalAccumulatedWalkTime(),
+        accumulatedWalkTimeFormatted: person.getAccumulatedWalkTimeFormatted(),
         totalDrivingTime: person.getTotalDrivingTime(),
         drivingTimeFormatted: person.getDrivingTimeFormatted(),
         isInStore: person.isCurrentlyInStore(),

@@ -63,6 +63,7 @@ function App() {
   };
 
   const stats = simulationManager.getSimulationStats();
+  const completedStats = simulationManager.getCompletedSummaryStats();
 
   return (
     <div className="App" style={{ position: 'relative' }}>
@@ -74,39 +75,64 @@ function App() {
           </div>
         </div>
         <p>Interactive parking lot simulation with dynamic spaces</p>
-        <div style={{ display: 'flex', gap: 16, marginTop: 16 }}>
-          <button 
-            onClick={startSimulation} 
-            disabled={isSimulationRunning}
-            style={{ padding: '8px 16px', fontSize: '14px' }}
-          >
-            Start Simulation
-          </button>
-          <button 
-            onClick={pauseSimulation} 
-            disabled={!isSimulationRunning}
-            style={{ padding: '8px 16px', fontSize: '14px' }}
-          >
-            Pause
-          </button>
-          <button 
-            onClick={resetSimulation}
-            style={{ padding: '8px 16px', fontSize: '14px' }}
-          >
-            Reset
-          </button>
-        </div>
-        <div style={{ 
-          display: 'flex', 
-          gap: 24, 
-          marginTop: 16, 
-          fontSize: '14px',
-          color: '#666'
-        }}>
-          <span>Cars: {stats.totalCars}</span>
-          <span>People: {stats.totalPeople}</span>
-          <span>Occupied: {stats.occupiedSpaces}</span>
-          <span>Available: {stats.availableSpaces}</span>
+        <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 16 }}>
+          {/* Simulation Controls and Demographic Stats on the Left */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+            <div style={{ display: 'flex', gap: 16 }}>
+              <button 
+                onClick={startSimulation} 
+                disabled={isSimulationRunning}
+                style={{ padding: '8px 16px', fontSize: '14px' }}
+              >
+                Start Simulation
+              </button>
+              <button 
+                onClick={pauseSimulation} 
+                disabled={!isSimulationRunning}
+                style={{ padding: '8px 16px', fontSize: '14px' }}
+              >
+                Pause
+              </button>
+              <button 
+                onClick={resetSimulation}
+                style={{ padding: '8px 16px', fontSize: '14px' }}
+              >
+                Reset
+              </button>
+            </div>
+            <div style={{ 
+              display: 'flex', 
+              gap: 24, 
+              fontSize: '14px',
+              color: '#fff'
+            }}>
+              <span>Cars: {stats.totalCars}</span>
+              <span>People: {stats.totalPeople}</span>
+              <span>Occupied: {stats.occupiedSpaces}</span>
+              <span>Available: {stats.availableSpaces}</span>
+            </div>
+          </div>
+          
+          {/* Summary Statistics on the Right */}
+          <div style={{
+            display: 'flex', 
+            flexDirection: 'column',
+            alignItems: 'flex-end',
+            gap: 8, 
+            fontSize: '14px',
+            color: '#fff',
+            textAlign: 'right'
+          }}>
+            <div style={{ fontWeight: 'bold', fontSize: 17, color: '#2e3a4d' }}>
+              🚶‍♂️ Walk & 🚗 Drive Summary:
+            </div>
+            <div>
+              <span style={{ fontWeight: 500, color: '#fff' }}>Total Walk Time:</span> {completedStats.formatted.totalWalk}
+            </div>
+            <div>
+              <span style={{ fontWeight: 500, color: '#fff' }}>Total Drive Time:</span> {completedStats.formatted.totalDrive}
+            </div>
+          </div>
         </div>
       </header>
       <main style={{ 
@@ -141,7 +167,7 @@ function App() {
           formatTime={formatTime}
           formatArrivalTime={simulationManager.formatArrivalTime}
         />
-        
+                
         {/* Optionally, show hovered car info as a floating tooltip */}
         {hoveredCarInfo && (
           <div style={{
@@ -171,6 +197,7 @@ function App() {
                 <div>Walk Speed: {hoveredCarInfo.person.walkSpeed} px/s</div>
                 <div>Lot Speed: {hoveredCarInfo.person.lotSpeed} px/s</div>
                 <div>Store Visit: {Math.floor(hoveredCarInfo.person.storeVisitTime / 60)}m {hoveredCarInfo.person.storeVisitTime % 60}s</div>
+                <div>Walk Time: {hoveredCarInfo.person.accumulatedWalkTimeFormatted}</div>
                 <div>Driving Time: {hoveredCarInfo.person.drivingTimeFormatted}</div>
               </>
             )}

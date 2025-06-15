@@ -230,4 +230,50 @@ export class SimulationManager {
       isRunning: this.isRunning
     };
   }
+
+  // Utility method to get summary stats for completed cars
+  getCompletedSummaryStats() {
+    const completed = this.completedCars;
+    if (completed.length === 0) {
+      return {
+        totalWalkTime: 0,
+        totalDriveTime: 0,
+        avgWalkTime: 0,
+        avgDriveTime: 0,
+        formatted: {
+          totalWalk: '0m 0s',
+          totalDrive: '0m 0s',
+          avgWalk: '0m 0s',
+          avgDrive: '0m 0s',
+        }
+      };
+    }
+    let totalWalk = 0;
+    let totalDrive = 0;
+    completed.forEach(({ person }) => {
+      if (person) {
+        totalWalk += person.getTotalAccumulatedWalkTime();
+        totalDrive += person.getTotalDrivingTime();
+      }
+    });
+    const avgWalk = totalWalk / completed.length;
+    const avgDrive = totalDrive / completed.length;
+    const format = (secs) => {
+      const m = Math.floor(secs / 60);
+      const s = Math.round(secs % 60);
+      return `${m}m ${s}s`;
+    };
+    return {
+      totalWalkTime: totalWalk,
+      totalDriveTime: totalDrive,
+      avgWalkTime: avgWalk,
+      avgDriveTime: avgDrive,
+      formatted: {
+        totalWalk: format(totalWalk),
+        totalDrive: format(totalDrive),
+        avgWalk: format(avgWalk),
+        avgDrive: format(avgDrive),
+      }
+    };
+  }
 } 
