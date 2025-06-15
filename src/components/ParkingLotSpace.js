@@ -11,6 +11,9 @@ const ParkingLotSpace = ({ space, isLast }) => {
     ? `${borderWidth}px solid #ffd600`
     : `${borderWidth}px solid #ffd600; border-right: none;`;
 
+  // Set background color based on handicapped status
+  const backgroundColor = space.handicapped ? '#87CEEB' : 'transparent'; // Light blue for handicapped
+
   return (
     <div
       className={`parking-space ${space.isOccupied ? 'occupied' : 'available'}`}
@@ -24,7 +27,7 @@ const ParkingLotSpace = ({ space, isLast }) => {
         borderBottom: 'none',
         borderLeft: `${borderWidth}px solid #ffd600`,
         borderRight: isLast ? `${borderWidth}px solid #ffd600` : 'none',
-        backgroundColor: 'transparent',
+        backgroundColor: backgroundColor,
         borderRadius: isLast ? '0 2px 2px 0' : '0',
         boxSizing: 'border-box',
         display: 'flex',
@@ -34,7 +37,7 @@ const ParkingLotSpace = ({ space, isLast }) => {
         fontSize: '0.85rem',
         paddingBottom: '0',
       }}
-      title={`Parking Space at (${x}, ${y}) - ${space.isOccupied ? 'Occupied' : 'Available'} - Walk: ${Math.round(walkDistance)}`}
+      title={`Parking Space at (${x}, ${y}) - ${space.isOccupied ? 'Occupied' : 'Available'} - Walk: ${Math.round(walkDistance)}${space.handicapped ? ' - HANDICAPPED' : ''}`}
     >
       <span className="walk-distance" style={{ 
         marginBottom: '4px',

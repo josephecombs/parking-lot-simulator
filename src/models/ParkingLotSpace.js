@@ -10,6 +10,7 @@ export class ParkingLotSpace {
     this.borderWidth = borderWidth;
     this.isOccupied = false;
     this.occupiedBy = null; // Will hold car reference when implemented
+    this.handicapped = false; // Default to false for all spaces
   }
 
   getPosition() {

@@ -43,6 +43,9 @@ export class ParkingLot {
     const buildingMidX = this.buildingEntrance.x + this.buildingEntrance.width / 2;
     const buildingMidY = this.buildingEntrance.y + this.buildingEntrance.height / 2;
 
+    let closestSpace = null;
+    let minDistance = Infinity;
+
     for (let i = 0; i < numSpaces; i++) {
       const x = startX + i * spaceWidth;
       // Midpoint of the top edge of the space
@@ -55,6 +58,18 @@ export class ParkingLot {
       const space = new ParkingLotSpace(x, y, spaceWidth, spaceHeight, borderWidth);
       space.walkDistance = walkDistance;
       this.spaces.push(space);
+      
+      // Track the closest space
+      if (walkDistance < minDistance) {
+        minDistance = walkDistance;
+        closestSpace = space;
+      }
+    }
+    
+    // Set the closest space as handicapped
+    if (closestSpace) {
+      closestSpace.handicapped = true;
+      console.log(`Set space at distance ${minDistance.toFixed(2)}px as handicapped`);
     }
   }
 
