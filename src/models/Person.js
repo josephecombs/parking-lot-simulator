@@ -15,6 +15,9 @@ export class Person {
     this.shoppingCompleteTime = 0;
     this.hasCompletedShopping = false;
     
+    // Driving time tracking
+    this.totalDrivingTime = 0; // Total time spent driving in seconds
+    
     // Walking position tracking
     this.x = 0;
     this.y = 0;
@@ -214,5 +217,28 @@ export class Person {
 
   isWalkingToCar() {
     return this.isWalkingToCar;
+  }
+
+  // Driving time tracking methods
+  addDrivingTime(seconds) {
+    this.totalDrivingTime += seconds;
+    console.log(`Person ${this.id} added ${seconds}s driving time, total: ${this.totalDrivingTime}s`);
+  }
+
+  addFullLotDelay(delaySeconds) {
+    // When encountering a full lot, add the delay time to driving time
+    // This represents the time spent circling the block and re-entering
+    this.addDrivingTime(delaySeconds);
+    console.log(`Person ${this.id} encountered full lot, added ${delaySeconds}s delay to driving time`);
+  }
+
+  getTotalDrivingTime() {
+    return this.totalDrivingTime;
+  }
+
+  getDrivingTimeFormatted() {
+    const minutes = Math.floor(this.totalDrivingTime / 60);
+    const seconds = this.totalDrivingTime % 60;
+    return `${minutes}m ${seconds}s`;
   }
 } 

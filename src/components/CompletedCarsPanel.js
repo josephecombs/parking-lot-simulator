@@ -134,6 +134,7 @@ const CompletedCarsPanel = ({ completedCars, formatTime, formatArrivalTime }) =>
               <div>Lot Speed: {hoveredCar.person.lotSpeed} px/s</div>
               <div>Store Visit: {Math.floor(hoveredCar.person.storeVisitTime / 60)}m {hoveredCar.person.storeVisitTime % 60}s</div>
               <div>Total Walk Time: {formatTime(hoveredCar.person.totalWalkTime)}</div>
+              <div>Total Driving Time: {hoveredCar.person.drivingTimeFormatted}</div>
             </>
           )}
         </div>

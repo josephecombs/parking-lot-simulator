@@ -27,6 +27,12 @@ export class Car {
     this.movementStartTime = 0;
     this.totalMovementTime = 0;
     this.isMoving = false;
+    
+    // Driving time tracking
+    this.drivingStartTime = null; // When driving to parking space starts
+    this.drivingEndTime = null; // When driving to parking space ends
+    this.exitDrivingStartTime = null; // When driving to exit starts
+    this.exitDrivingEndTime = null; // When driving to exit ends
   }
 
   generateRandomColor() {
@@ -62,10 +68,16 @@ export class Car {
     } else {
       // All spaces are occupied - add a minute to arrival time and reschedule
       const originalArrivalTime = this.arrivalTime;
-      this.arrivalTime += 60; // Add 60 seconds (1 minute)
+      const delaySeconds = 60; // 60 seconds (1 minute) delay
+      this.arrivalTime += delaySeconds;
+      
+      // Add the delay to the person's driving time
+      if (this.person) {
+        this.person.addFullLotDelay(delaySeconds);
+      }
       
       console.warn(`🚫 Car ${this.id} could not find an available space at ${originalArrivalTime}s!`);
-      console.log(`⏰ Rescheduling car ${this.id} to arrive at ${this.arrivalTime}s (delayed by 1 minute)`);
+      console.log(`⏰ Rescheduling car ${this.id} to arrive at ${this.arrivalTime}s (delayed by ${delaySeconds}s)`);
       
       // Reset car status to scheduled so it can be rescheduled
       this.status = 'scheduled';
@@ -129,6 +141,7 @@ export class Car {
     this.status = 'driving';
     this.isMoving = true;
     this.movementStartTime = currentTime;
+    this.drivingStartTime = currentTime; // Track when driving starts
     
     // Set start position (current position at entrance)
     this.startX = this.x;
@@ -174,6 +187,13 @@ export class Car {
     this.isMoving = false;
     this.status = 'parked';
     this.parkingTime = currentTime;
+    this.drivingEndTime = currentTime; // Track when driving ends
+    
+    // Add driving time to person's total driving time
+    if (this.person && this.drivingStartTime !== null) {
+      const drivingTime = currentTime - this.drivingStartTime;
+      this.person.addDrivingTime(drivingTime);
+    }
     
     // Space is already occupied from when we claimed it upon arrival
     // Just update the car's position to the final position in the space
@@ -229,6 +249,7 @@ export class Car {
   startDrivingToExit(currentTime) {
     this.isMoving = true;
     this.movementStartTime = currentTime;
+    this.exitDrivingStartTime = currentTime; // Track when exit driving starts
     
     // Set start position (current position in space)
     this.startX = this.x;
@@ -300,6 +321,8 @@ export class Car {
         lotSpeed: person.getLotSpeed(),
         storeVisitTime: person.getStoreVisitTime(),
         totalWalkTime: person.getTotalWalkTime(),
+        totalDrivingTime: person.getTotalDrivingTime(),
+        drivingTimeFormatted: person.getDrivingTimeFormatted(),
         isInStore: person.isCurrentlyInStore(),
         isWalking: person.isCurrentlyWalking()
       } : null
@@ -310,6 +333,13 @@ export class Car {
     this.isMoving = false;
     this.status = 'exited';
     this.exitTime = currentTime;
+    this.exitDrivingEndTime = currentTime; // Track when exit driving ends
+    
+    // Add exit driving time to person's total driving time
+    if (this.person && this.exitDrivingStartTime !== null) {
+      const exitDrivingTime = currentTime - this.exitDrivingStartTime;
+      this.person.addDrivingTime(exitDrivingTime);
+    }
     
     // Vacate the parking space
     if (this.occupiedSpace) {

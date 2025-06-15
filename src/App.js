@@ -171,6 +171,7 @@ function App() {
                 <div>Walk Speed: {hoveredCarInfo.person.walkSpeed} px/s</div>
                 <div>Lot Speed: {hoveredCarInfo.person.lotSpeed} px/s</div>
                 <div>Store Visit: {Math.floor(hoveredCarInfo.person.storeVisitTime / 60)}m {hoveredCarInfo.person.storeVisitTime % 60}s</div>
+                <div>Driving Time: {hoveredCarInfo.person.drivingTimeFormatted}</div>
               </>
             )}
           </div>
