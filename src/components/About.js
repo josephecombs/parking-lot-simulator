@@ -103,11 +103,11 @@ const About = () => {
           <div className="project-links">
             <a href="https://www.fillandflush.com" target="_blank" rel="noopener noreferrer" className="project-link">
               <h3>Fill & Flush</h3>
-              <p>Innovative solutions for water management and conservation</p>
+              <p>Simulation of an improved method of deplaning</p>
             </a>
             <a href="https://www.platechase.com" target="_blank" rel="noopener noreferrer" className="project-link">
               <h3>Plate Chase</h3>
-              <p>Advanced license plate recognition and tracking systems</p>
+              <p>A fun static site that allows you to log the License Plates you've seen</p>
             </a>
             <a href="https://www.josephecombs.com" target="_blank" rel="noopener noreferrer" className="project-link">
               <h3>Joseph E. Combs</h3>
