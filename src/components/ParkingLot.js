@@ -78,7 +78,7 @@ const ParkingLot = ({ parkingLot, cars = [], time = 0, onCarHover, onCarLeave })
             fontSize: '1.1rem',
             fontWeight: 'bold',
             letterSpacing: '1px',
-            padding: '0 12px',
+            // padding: '0 4px',
             width: 'auto',
             boxShadow: '0 2px 8px rgba(40,167,69,0.15)',
             overflow: 'visible',
