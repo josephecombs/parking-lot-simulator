@@ -90,7 +90,7 @@ export class Car {
       this.y = 0;
       
       // RAISE EXCEPTION for debugging
-      throw new Error(`PARKING LOT FULL DELAY: Car ${this.id} could not find space at time ${currentTime}s. Check console for detailed lot state.`);
+      // throw new Error(`PARKING LOT FULL DELAY: Car ${this.id} could not find space at time ${currentTime}s. Check console for detailed lot state.`);
     }
   }
 

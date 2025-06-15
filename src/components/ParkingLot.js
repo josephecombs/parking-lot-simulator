@@ -59,17 +59,18 @@ const ParkingLot = ({ parkingLot, cars = [], time = 0, onCarHover, onCarLeave })
           <span style={{fontSize: '0.8rem', fontWeight: 400, marginTop: 2}}>ENTRANCE</span>
         </div>
 
-        {/* Entrance */}
+        `{/* Entrance */}
         <div
           className="entrance"
           style={{
             position: 'absolute',
             left: entrance.x,
             top: entrance.y,
-            height: entrance.height,
+            // height: entrance.height + 20, // Adjusted height
             backgroundColor: '#28a745',
             border: '2px solid #1e7e34',
-            borderRadius: '6px',
+            borderTopRightRadius: '6px',
+            borderBottomRightRadius: '6px',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
@@ -77,15 +78,17 @@ const ParkingLot = ({ parkingLot, cars = [], time = 0, onCarHover, onCarLeave })
             fontSize: '1.1rem',
             fontWeight: 'bold',
             letterSpacing: '1px',
-            padding: '0 16px',
+            padding: '0 12px',
             width: 'auto',
             boxShadow: '0 2px 8px rgba(40,167,69,0.15)',
             overflow: 'visible',
+            writingMode: 'vertical-rl',
+            textOrientation: 'upright',
           }}
         >
           ENTRANCE
         </div>
-
+`
         {/* Exit */}
         <div
           className="exit"
