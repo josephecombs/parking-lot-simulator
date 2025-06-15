@@ -1,7 +1,7 @@
 import React from 'react';
 import '../styles/ParkingLotSpace.css';
 
-const ParkingLotSpace = ({ space, isLast }) => {
+const ParkingLotSpace = ({ space, isLast, onSpaceHover, onSpaceLeave, time }) => {
   const { x, y } = space.getPosition();
   const { width, height, borderWidth } = space.getDimensions();
   const walkDistance = space.walkDistance;
@@ -36,8 +36,12 @@ const ParkingLotSpace = ({ space, isLast }) => {
         alignItems: 'center',
         fontSize: '0.85rem',
         paddingBottom: '0',
+        cursor: 'pointer',
+        transition: 'box-shadow 0.2s',
+        boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
       }}
-      title={`Parking Space at (${x}, ${y}) - ${space.isOccupied ? 'Occupied' : 'Available'} - Walk: ${Math.round(walkDistance)}${space.handicapped ? ' - HANDICAPPED' : ''}`}
+      onMouseEnter={onSpaceHover}
+      onMouseLeave={onSpaceLeave}
     >
       <span className="walk-distance" style={{ 
         marginBottom: '4px',

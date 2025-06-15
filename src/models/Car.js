@@ -137,8 +137,8 @@ export class Car {
       // Double-check the space is still available before claiming
       if (closestSpace.isAvailable()) {
         this.targetSpace = closestSpace;
-        // Mark the space as occupied immediately
-        closestSpace.occupy(this);
+        // Mark the space as occupied immediately with current time
+        closestSpace.occupy(this, this.actualArrivalTime);
         const spaceType = closestSpace.handicapped ? 'handicapped' : 'regular';
         console.log(`✅ Car ${this.id} (${isHandicapped ? 'handicapped' : 'non-handicapped'}) successfully claimed ${spaceType} space at distance ${minDistance.toFixed(2)}px from building entrance`);
       } else {
@@ -230,7 +230,7 @@ export class Car {
   park(space) {
     if (space && space.isAvailable()) {
       this.occupiedSpace = space;
-      space.occupy(this);
+      space.occupy(this, this.parkingTime);
       
       // Position car in the center of the space
       this.x = space.x + (space.width - this.width) / 2;
@@ -243,7 +243,7 @@ export class Car {
 
   leave() {
     if (this.occupiedSpace) {
-      this.occupiedSpace.vacate();
+      this.occupiedSpace.vacate(this.exitTime);
       this.occupiedSpace = null;
     }
     this.status = 'exited';
@@ -358,9 +358,9 @@ export class Car {
       this.person.addDrivingTime(exitDrivingTime);
     }
     
-    // Vacate the parking space
+    // Vacate the parking space with current time
     if (this.occupiedSpace) {
-      this.occupiedSpace.vacate();
+      this.occupiedSpace.vacate(currentTime);
       this.occupiedSpace = null;
     }
     

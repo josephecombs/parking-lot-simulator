@@ -83,6 +83,7 @@ function App() {
 
   const stats = simulationManager.getSimulationStats();
   const completedStats = simulationManager.getCompletedSummaryStats();
+  const lotOccupancyPercent = parkingLot.getAverageOccupancyPercentage(time, TOTAL_SIMULATION_TIME).toFixed(1);
 
   return (
     <div className="App" style={{ position: 'relative' }}>
@@ -177,6 +178,9 @@ function App() {
             </div>
             <div>
               <span style={{ fontWeight: 500, color: '#fff' }}>Total Drive Time:</span> {completedStats.formatted.totalDrive}
+            </div>
+            <div style={{ marginTop: 8, fontWeight: 600, color: '#ffd700', fontSize: 16 }}>
+              Lot Occupancy: {lotOccupancyPercent}%
             </div>
           </div>
         </div>

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import ParkingLotSpace from './ParkingLotSpace';
 import '../styles/ParkingLot.css';
 
@@ -9,6 +9,9 @@ const ParkingLot = ({ parkingLot, cars = [], time = 0, onCarHover, onCarLeave })
   const walkingPeople = cars
     .map(car => car.getPerson())
     .filter(person => person && person.isCurrentlyWalking());
+
+  // Space hover state
+  const [hoveredSpace, setHoveredSpace] = useState(null);
 
   return (
     <div className="parking-lot-container" style={{ position: 'relative' }}>
@@ -112,7 +115,14 @@ const ParkingLot = ({ parkingLot, cars = [], time = 0, onCarHover, onCarLeave })
 
         {/* Parking Spaces */}
         {spaces.map((space, index) => (
-          <ParkingLotSpace key={index} space={space} isLast={index === spaces.length - 1} />
+          <ParkingLotSpace 
+            key={index} 
+            space={space} 
+            isLast={index === spaces.length - 1}
+            time={time}
+            onSpaceHover={() => setHoveredSpace({ space, index })}
+            onSpaceLeave={() => setHoveredSpace(null)}
+          />
         ))}
 
         {/* Render walking people */}
@@ -188,6 +198,40 @@ const ParkingLot = ({ parkingLot, cars = [], time = 0, onCarHover, onCarLeave })
           );
         })}
       </div>
+      
+      {/* Space statistics tooltip */}
+      {hoveredSpace && (
+        <div style={{
+          position: 'fixed',
+          left: '60%',
+          top: '20%',
+          backgroundColor: '#222',
+          color: 'white',
+          padding: '14px',
+          borderRadius: '8px',
+          fontSize: '14px',
+          zIndex: 10001,
+          boxShadow: '0 4px 12px rgba(0,0,0,0.3)'
+        }}>
+          <div style={{ fontWeight: 'bold', marginBottom: '8px' }}>
+            Space Stats
+          </div>
+          <div>Space ID: {hoveredSpace.index}</div>
+          <div>Distance from Entrance: {Math.round(hoveredSpace.space.walkDistance)} px</div>
+          {(() => {
+            const stats = hoveredSpace.space.getFormattedStats(time);
+            return (
+              <>
+                <div>Total Occupied: {stats.totalOccupiedTime}</div>
+                <div>Avg Occupancy: {stats.averageOccupancyTime}</div>
+                <div>Occupancy Count: {stats.occupancyCount}</div>
+                <div>Occupancy %: {stats.occupancyPercentage}%</div>
+                <div>Currently Occupied: {stats.isCurrentlyOccupied ? 'Yes' : 'No'}</div>
+              </>
+            );
+          })()}
+        </div>
+      )}
       
       {/* CSS Animations */}
       <style dangerouslySetInnerHTML={{

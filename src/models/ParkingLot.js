@@ -76,4 +76,11 @@ export class ParkingLot {
   getSpaces() {
     return this.spaces;
   }
+
+  // Calculate average occupancy percentage across all spaces
+  getAverageOccupancyPercentage(currentTime = 0, totalTime = 3600) {
+    if (this.spaces.length === 0) return 0;
+    const sum = this.spaces.reduce((acc, space) => acc + space.getOccupancyPercentage(currentTime, totalTime), 0);
+    return sum / this.spaces.length;
+  }
 } 
