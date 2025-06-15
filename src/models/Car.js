@@ -89,10 +89,23 @@ export class Car {
   }
 
   findAndClaimClosestSpace(parkingLot) {
-    const availableSpaces = parkingLot.getSpaces().filter(space => space.isAvailable());
+    // Filter available spaces based on handicapped status
+    let availableSpaces = parkingLot.getSpaces().filter(space => space.isAvailable());
+    
+    // Check if this car is handicapped
+    const isHandicapped = this.person && this.person.isHandicapped();
+    
+    if (isHandicapped) {
+      // Handicapped cars can park in any available space (handicapped or regular)
+      console.log(`Car ${this.id} is handicapped - can select any available space`);
+    } else {
+      // Non-handicapped cars can only park in non-handicapped spaces
+      availableSpaces = availableSpaces.filter(space => !space.handicapped);
+      console.log(`Car ${this.id} is not handicapped - can only select non-handicapped spaces`);
+    }
     
     if (availableSpaces.length === 0) {
-      console.warn(`No available spaces for car ${this.id}`);
+      console.warn(`No available ${isHandicapped ? '' : 'non-handicapped '}spaces for car ${this.id}`);
       return;
     }
 
@@ -126,7 +139,8 @@ export class Car {
         this.targetSpace = closestSpace;
         // Mark the space as occupied immediately
         closestSpace.occupy(this);
-        console.log(`✅ Car ${this.id} successfully claimed space at distance ${minDistance.toFixed(2)}px from building entrance`);
+        const spaceType = closestSpace.handicapped ? 'handicapped' : 'regular';
+        console.log(`✅ Car ${this.id} (${isHandicapped ? 'handicapped' : 'non-handicapped'}) successfully claimed ${spaceType} space at distance ${minDistance.toFixed(2)}px from building entrance`);
       } else {
         console.warn(`⚠️ Space was claimed by another car while car ${this.id} was selecting. Trying again...`);
         // Recursively try to find another space

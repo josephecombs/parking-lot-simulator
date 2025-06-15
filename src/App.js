@@ -12,9 +12,19 @@ function App() {
   const [time, setTime] = useState(0);
   const [isSimulationRunning, setIsSimulationRunning] = useState(false);
   const [hoveredCarInfo, setHoveredCarInfo] = useState(null);
+  const [simulationSpeed, setSimulationSpeed] = useState(8); // Default 8x
 
   // Total simulation time: 3600 seconds (1 hour)
   const TOTAL_SIMULATION_TIME = 3600;
+
+  // Map speed to interval in ms
+  const speedToInterval = {
+    1: 1000,
+    4: 250,
+    8: 125,
+    16: 62.5,
+    32: 31.25,
+  };
 
   useEffect(() => {
     let interval;
@@ -31,10 +41,10 @@ function App() {
           }
           return newTime;
         });
-      }, 125); // 0.125 seconds per tick for 8x realtime simulation
+      }, speedToInterval[simulationSpeed]);
     }
     return () => clearInterval(interval);
-  }, [isSimulationRunning, time, simulationManager]);
+  }, [isSimulationRunning, time, simulationManager, simulationSpeed]);
 
   const startSimulation = () => {
     setTime(0);
@@ -70,8 +80,35 @@ function App() {
       <header className="App-header">
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 24 }}>
           <h1 style={{ margin: 0 }}>Parking Lot Simulator</h1>
-          <div className="time-ticker">
-            Time: <span>{formatTime(time)}</span> / {formatTime(TOTAL_SIMULATION_TIME)}
+          <div className="time-ticker" style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
+            <span>
+              Time: <span>{formatTime(time)}</span> / {formatTime(TOTAL_SIMULATION_TIME)}
+            </span>
+            {/* Speed Controls */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: 4, background: 'rgba(255,255,255,0.08)', borderRadius: 8, padding: '2px 8px' }}>
+              {[1, 4, 8, 16, 32].map((speed) => (
+                <button
+                  key={speed}
+                  onClick={() => setSimulationSpeed(speed)}
+                  style={{
+                    background: simulationSpeed === speed ? '#ffd700' : 'rgba(255,255,255,0.15)',
+                    color: simulationSpeed === speed ? '#222' : '#fff',
+                    border: 'none',
+                    borderRadius: 4,
+                    padding: '2px 10px',
+                    fontWeight: simulationSpeed === speed ? 700 : 400,
+                    fontSize: 14,
+                    cursor: 'pointer',
+                    outline: simulationSpeed === speed ? '2px solid #ffd700' : 'none',
+                    boxShadow: simulationSpeed === speed ? '0 0 6px #ffd70088' : 'none',
+                    transition: 'all 0.15s',
+                  }}
+                  aria-label={`Set simulation speed to ${speed}x`}
+                >
+                  {speed}x
+                </button>
+              ))}
+            </div>
           </div>
         </div>
         <p>Interactive parking lot simulation with dynamic spaces</p>
