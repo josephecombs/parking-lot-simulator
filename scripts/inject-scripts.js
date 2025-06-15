@@ -19,6 +19,10 @@ const mainCss = manifest.files['main.css'];
 const scriptTag = `<script defer src="${mainJs}"></script>`;
 const cssTag = `<link rel="stylesheet" href="${mainCss}">`;
 
+// Read homepage from package.json
+const pkg = require('../package.json');
+const publicUrl = pkg.homepage || '.';
+
 // Process each static page
 staticPages.forEach(pageName => {
   const pagePath = path.join(__dirname, '../build', pageName);
@@ -33,8 +37,11 @@ staticPages.forEach(pageName => {
   
   // Insert the tags before the closing head tag
   pageContent = pageContent.replace('</head>', `${cssTag}\n    ${scriptTag}\n  </head>`);
+
+  // Replace %PUBLIC_URL% with the homepage value
+  pageContent = pageContent.replace(/%PUBLIC_URL%/g, publicUrl);
   
   // Write back the modified HTML
   fs.writeFileSync(pagePath, pageContent);
-  console.log(`Successfully injected scripts into ${pageName}`);
+  console.log(`Injected scripts and replaced %PUBLIC_URL% in ${pageName}`);
 }); 
