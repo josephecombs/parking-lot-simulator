@@ -13,8 +13,8 @@ export class Person {
     const baseWalkSpeed = 20; // pixels per second - reasonable walking speed
 
     // THIS IS FUNDAMENTAL CONSTRAINT TO ENTIRE WELFARE ANALYSIS!!! 
-    // HOW MUCH SLOWER DO THE HANDICAPPED ACTUALLY WALK?
-    this.walkSpeed = this.handicapped ? baseWalkSpeed : baseWalkSpeed;
+    // HOW MUCH SLOWER DO THE HANDICAPPED ACTUALLY WALK THAN THE ABLE BODIED?
+    this.walkSpeed = this.handicapped ? baseWalkSpeed / 1.5 : baseWalkSpeed;
     
     this.lotSpeed = 100; // pixels per second - slower movement in parking lot
     this.storeVisitTime = this.generateStoreVisitTime(); // in seconds
