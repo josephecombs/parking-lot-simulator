@@ -1,0 +1,1 @@
+You're doing amazingly. Now, I need you to implement some statistics for the Spaces. I want you to track the amount of time that a space actually has a car in it. I should be able to hover over a space to find out its information - average occupancy etc.  Also, in the top right, calculate total lot occupancy over the time period as a percentage - an average of averages
