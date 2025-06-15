@@ -47,41 +47,45 @@ const About = () => {
         <section className="about-section">
           <h2>Project Overview</h2>
           <p>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
-            Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. 
-            Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+            This parking lot simulator explores a fundamental question in urban economics: how do we measure the real welfare impact 
+            of handicapped parking spots? While these spaces are legally required and socially accepted, their true economic value 
+            and distributional effects remain poorly understood. This project aims to quantify the trade-offs between accessibility, 
+            parking efficiency, and overall social welfare.
           </p>
           <p>
-            Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. 
-            Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, 
-            eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.
+            Traditional economic analysis often treats handicapped parking as a simple regulatory cost, but this approach misses 
+            the complex interactions between accessibility needs, parking demand patterns, and the broader transportation ecosystem. 
+            Our simulator allows users to experiment with different parking configurations to better understand these dynamics.
           </p>
         </section>
 
         <section className="about-section">
           <h2>Research Methodology</h2>
           <p>
-            Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores 
-            eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, 
-            consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem.
+            The simulator employs agent-based modeling to represent diverse parking behaviors and accessibility needs. Each simulation 
+            tracks individual vehicles with varying mobility requirements, time constraints, and parking preferences. By observing 
+            how different handicapped spot allocations affect overall parking efficiency, wait times, and accessibility outcomes, 
+            we can begin to measure the true welfare implications of accessibility accommodations.
           </p>
           <p>
-            Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? 
-            Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, 
-            vel illum qui dolorem eum fugiat quo voluptas nulla pariatur?
+            Key metrics include: average wait times for different user groups, parking space utilization rates, accessibility 
+            compliance effectiveness, and the economic cost of accessibility accommodations relative to their social benefits. 
+            This data-driven approach helps bridge the gap between regulatory requirements and measurable outcomes.
           </p>
         </section>
 
         <section className="about-section">
           <h2>Key Findings</h2>
           <p>
-            At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti 
-            quos dolores et quas molestias excepturi sint occaecati cupiditate non provident, similique sunt in culpa qui officia 
-            deserunt mollitia animi, id est laborum et dolorum fuga.
+            Our research reveals a crucial insight: the speed of handicapped walking relative to non-handicapped walking is 
+            fundamental to determining the economic justification for reserved parking spaces. The slower you assume handicapped 
+            individuals walk compared to the general population, the more economically justifiable these spaces become.
           </p>
           <p>
-            Et harum quidem rerum facilis est et expedita distinctio. Nam libero tempore, cum soluta nobis est eligendi optio 
-            cumque nihil impedit quo minus id quod maxime placeat facere possimus, omnis voluptas assumenda est, omnis dolor repellendus.
+            This finding challenges traditional approaches that treat accessibility accommodations as purely regulatory costs. 
+            When we model realistic walking speed differentials, the welfare benefits of closer parking access become quantifiable 
+            and significant. The simulation demonstrates that even modest differences in walking speed can justify substantial 
+            parking space allocations when considering the cumulative time savings and improved accessibility outcomes.
           </p>
         </section>
 
