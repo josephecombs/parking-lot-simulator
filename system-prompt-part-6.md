@@ -1,3 +1,1 @@
-now we have the panels and all the classes. we need to start implementing the logic of rendering Person as they walk from their car to the building entrance. the behavior of this should be the same as with cars - use the pythagorean theorem, the time the car stops in its space, and the person's walk speed to figure out the position of the person as they walk from spot to entrance.
-
-also, add some more buffer between the spaces and the entrance so that it's easier to see the people as they walk. right now it's a little cramped at the top of the lot
+You're doing amazingly. Now, I need you to implement some statistics for the Spaces. I want you to track the amount of time that a space actually has a car in it. I should be able to hover over a space to find out its information - average occupancy etc.  Also, in the top right, calculate total lot occupancy over the time period as a percentage - an average of averages
