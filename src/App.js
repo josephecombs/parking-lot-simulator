@@ -304,7 +304,7 @@ function App() {
         <p>Interactive parking lot simulation - ORIGINAL SCHOLARSHIP</p>
         <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 16 }}>
           {/* Simulation Controls and Demographic Stats on the Left */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 16, flex: 1 }}>
             <div style={{ display: 'flex', gap: 16 }}>
               <button 
                 onClick={startSimulation} 
@@ -341,7 +341,7 @@ function App() {
           </div>
           
           {/* Handicapped Toggle Button in the Center */}
-          <div style={{ display: 'flex', alignItems: 'center' }}>
+          <div style={{ display: 'flex', alignItems: 'center', position: 'absolute', left: '50%', transform: 'translateX(-50%)' }}>
             <button
               onClick={toggleHandicappedMode}
               style={{
@@ -392,7 +392,8 @@ function App() {
             gap: 8, 
             fontSize: '14px',
             color: '#fff',
-            textAlign: 'right'
+            textAlign: 'right',
+            flex: 1
           }}>
             <div style={{ fontWeight: 'bold', fontSize: 17, color: '#2e3a4d' }}>
               🚶‍♂️ Walk & 🚗 Drive Summary:
