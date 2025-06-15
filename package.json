@@ -20,7 +20,8 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "predeploy": "npm run build && node scripts/inject-scripts.js",
-    "deploy": "gh-pages -d build"
+    "deploy": "gh-pages -d build",
+    "resize-social-images": "node scripts/resize-social-images.js"
   },
   "eslintConfig": {
     "extends": [
@@ -41,6 +42,7 @@
     ]
   },
   "devDependencies": {
-    "gh-pages": "^6.3.0"
+    "gh-pages": "^6.3.0",
+    "jimp": "^0.16.13"
   }
 }
