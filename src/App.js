@@ -265,6 +265,25 @@ function App() {
   const completedStats = visibleSimulationManager.getCompletedSummaryStats();
   const lotOccupancyPercent = visibleParkingLot.getAverageOccupancyPercentage(time, TOTAL_SIMULATION_TIME).toFixed(1);
 
+  // Get stats from both simulations for comparison
+  const handicappedStats = simulationManagerWithHandicapped.getCompletedSummaryStats();
+  const nonHandicappedStats = simulationManagerWithoutHandicapped.getCompletedSummaryStats();
+  
+  // Calculate the "cost" of handicapped spaces (difference in times)
+  const walkTimeCost = nonHandicappedStats.totalWalkTime - handicappedStats.totalWalkTime;
+  const driveTimeCost = nonHandicappedStats.totalDriveTime - handicappedStats.totalDriveTime;
+  
+  // Format the cost times
+  const formatCostTime = (seconds) => {
+    if (seconds === 0) return '0s';
+    const minutes = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return minutes > 0 ? `${minutes}m ${secs}s` : `${secs}s`;
+  };
+  
+  const walkTimeCostFormatted = formatCostTime(walkTimeCost);
+  const driveTimeCostFormatted = formatCostTime(driveTimeCost);
+
   return (
     <div className="App" style={{ position: 'relative' }}>
       <header className="App-header">
@@ -406,6 +425,23 @@ function App() {
             </div>
             <div style={{ marginTop: 8, fontWeight: 600, color: '#ffd700', fontSize: 16 }}>
               Lot Occupancy: {lotOccupancyPercent}%
+            </div>
+            <div style={{ 
+              marginTop: 12, 
+              padding: '8px 12px', 
+              background: 'rgba(255,255,255,0.1)', 
+              borderRadius: '6px',
+              border: '1px solid rgba(255,255,255,0.2)'
+            }}>
+              <div style={{ fontWeight: 'bold', fontSize: 15, color: '#ffd700', marginBottom: 4 }}>
+                ♿ Handicapped Space Cost:
+              </div>
+              <div style={{ fontSize: 13, color: walkTimeCost > 0 ? '#ff6b6b' : '#4ecdc4' }}>
+                Walk Time: +{walkTimeCostFormatted}
+              </div>
+              <div style={{ fontSize: 13, color: driveTimeCost > 0 ? '#ff6b6b' : '#4ecdc4' }}>
+                Drive Time: +{driveTimeCostFormatted}
+              </div>
             </div>
           </div>
         </div>
