@@ -1,3 +1,42 @@
+# Parking Lot Simulator
+
+## Deployment & Favicon Troubleshooting
+
+### Deploying to GitHub Pages
+
+1. **Build the app:**
+   ```bash
+   npm run build
+   ```
+2. **(Optional) Generate social images:**
+   ```bash
+   npm run resize-social-images
+   ```
+3. **Deploy:**
+   ```bash
+   npm run predeploy
+   npm run deploy
+   ```
+   This will push the contents of the `build` directory to GitHub Pages using the `gh-pages` branch.
+
+### Favicon & App Icon Setup
+- All favicon and app icon files are in the `public/` directory and referenced in `index.html`, `about.html`, and `manifest.json`.
+- If you update the favicon, make sure to replace all of these:
+  - `favicon.ico`
+  - `favicon-16x16.png`
+  - `favicon-32x32.png`
+  - `apple-touch-icon.png`
+  - `android-chrome-192x192.png`
+  - `android-chrome-512x512.png`
+  - `site.webmanifest`
+
+### Favicon Not Updating?
+- Browsers cache favicons aggressively. Try a **hard refresh** (Ctrl+Shift+R or Cmd+Shift+R) or clear your browser cache.
+- Make sure you are not using an old bookmark or browser tab.
+- If you are using a PWA or have installed the app to your home screen, you may need to remove and re-add it to see the new icon.
+
+---
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
