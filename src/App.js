@@ -292,6 +292,34 @@ function App() {
         <Route path="/" element={
           <div className="App" style={{ position: 'relative' }}>
             <header className="App-header">
+              {/* Tiny About link in top right */}
+              <Link 
+                to="/about" 
+                style={{
+                  position: 'absolute',
+                  top: '10px',
+                  right: '20px',
+                  color: 'rgba(255,255,255,0.7)',
+                  textDecoration: 'none',
+                  fontSize: '12px',
+                  fontWeight: '400',
+                  padding: '4px 8px',
+                  borderRadius: '4px',
+                  transition: 'all 0.2s ease',
+                  zIndex: 1000
+                }}
+                onMouseEnter={(e) => {
+                  e.target.style.color = 'rgba(255,255,255,1)';
+                  e.target.style.background = 'rgba(255,255,255,0.1)';
+                }}
+                onMouseLeave={(e) => {
+                  e.target.style.color = 'rgba(255,255,255,0.7)';
+                  e.target.style.background = 'transparent';
+                }}
+              >
+                About
+              </Link>
+              
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 24 }}>
                 <h1 style={{ margin: 0 }}>Parking Lot Simulator</h1>
                 <div className="time-ticker" style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
@@ -324,30 +352,6 @@ function App() {
                     ))}
                   </div>
                 </div>
-                <Link 
-                  to="/about" 
-                  style={{
-                    background: 'rgba(255,255,255,0.1)',
-                    color: '#fff',
-                    textDecoration: 'none',
-                    padding: '8px 16px',
-                    borderRadius: '8px',
-                    fontSize: '14px',
-                    fontWeight: '500',
-                    border: '1px solid rgba(255,255,255,0.2)',
-                    transition: 'all 0.3s ease'
-                  }}
-                  onMouseEnter={(e) => {
-                    e.target.style.background = 'rgba(255,255,255,0.2)';
-                    e.target.style.transform = 'translateY(-1px)';
-                  }}
-                  onMouseLeave={(e) => {
-                    e.target.style.background = 'rgba(255,255,255,0.1)';
-                    e.target.style.transform = 'translateY(0)';
-                  }}
-                >
-                  About
-                </Link>
               </div>
               <p>Interactive parking lot simulation - ORIGINAL SCHOLARSHIP</p>
               <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 16 }}>
