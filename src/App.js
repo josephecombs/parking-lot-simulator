@@ -7,8 +7,28 @@ import CompletedCarsPanel from './components/CompletedCarsPanel';
 import './App.css';
 
 function App() {
-  const [parkingLot] = useState(() => new ParkingLot(1000, 500));
-  const [simulationManager] = useState(() => new SimulationManager(parkingLot));
+  // Create two parking lots - one with handicapped spaces, one without
+  const [parkingLotWithHandicapped] = useState(() => new ParkingLot(1000, 500));
+  const [parkingLotWithoutHandicapped] = useState(() => {
+    const lot = new ParkingLot(1000, 500);
+    // Remove handicapped designation from all spaces
+    lot.getSpaces().forEach(space => {
+      space.handicapped = false;
+    });
+    return lot;
+  });
+  
+  // Create two simulation managers with the same schedule
+  const [simulationManagerWithHandicapped] = useState(() => new SimulationManager(parkingLotWithHandicapped));
+  const [simulationManagerWithoutHandicapped] = useState(() => new SimulationManager(parkingLotWithoutHandicapped));
+  
+  // State to track which simulation is active
+  const [isHandicappedMode, setIsHandicappedMode] = useState(true);
+  
+  // Use the active simulation manager based on the mode
+  const activeSimulationManager = isHandicappedMode ? simulationManagerWithHandicapped : simulationManagerWithoutHandicapped;
+  const activeParkingLot = isHandicappedMode ? parkingLotWithHandicapped : parkingLotWithoutHandicapped;
+  
   const [time, setTime] = useState(0);
   const [isSimulationRunning, setIsSimulationRunning] = useState(false);
   const [hoveredCarInfo, setHoveredCarInfo] = useState(null);
@@ -29,11 +49,11 @@ function App() {
   useEffect(() => {
     // Start simulation automatically on mount
     setTime(0);
-    simulationManager.setCurrentTime(0);
+    activeSimulationManager.setCurrentTime(0);
     setIsSimulationRunning(true);
-    simulationManager.startSimulation();
+    activeSimulationManager.startSimulation();
     // eslint-disable-next-line
-  }, []);
+  }, [isHandicappedMode]);
 
   useEffect(() => {
     let interval;
@@ -41,11 +61,11 @@ function App() {
       interval = setInterval(() => {
         setTime((prev) => {
           const newTime = prev + 1;
-          simulationManager.setCurrentTime(newTime);
+          activeSimulationManager.setCurrentTime(newTime);
           
           if (newTime >= TOTAL_SIMULATION_TIME) {
             setIsSimulationRunning(false);
-            simulationManager.pauseSimulation();
+            activeSimulationManager.pauseSimulation();
             return TOTAL_SIMULATION_TIME;
           }
           return newTime;
@@ -53,25 +73,29 @@ function App() {
       }, speedToInterval[simulationSpeed]);
     }
     return () => clearInterval(interval);
-  }, [isSimulationRunning, time, simulationManager, simulationSpeed]);
+  }, [isSimulationRunning, time, activeSimulationManager, simulationSpeed]);
 
   const startSimulation = () => {
     setTime(0);
-    simulationManager.setCurrentTime(0);
+    activeSimulationManager.setCurrentTime(0);
     setIsSimulationRunning(true);
-    simulationManager.startSimulation();
+    activeSimulationManager.startSimulation();
   };
 
   const pauseSimulation = () => {
     setIsSimulationRunning(false);
-    simulationManager.pauseSimulation();
+    activeSimulationManager.pauseSimulation();
   };
 
   const resetSimulation = () => {
     setTime(0);
-    simulationManager.setCurrentTime(0);
+    activeSimulationManager.setCurrentTime(0);
     setIsSimulationRunning(false);
-    simulationManager.resetSimulation();
+    activeSimulationManager.resetSimulation();
+  };
+
+  const toggleHandicappedMode = () => {
+    setIsHandicappedMode(!isHandicappedMode);
   };
 
   const formatTime = (seconds) => {
@@ -81,9 +105,9 @@ function App() {
     return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
   };
 
-  const stats = simulationManager.getSimulationStats();
-  const completedStats = simulationManager.getCompletedSummaryStats();
-  const lotOccupancyPercent = parkingLot.getAverageOccupancyPercentage(time, TOTAL_SIMULATION_TIME).toFixed(1);
+  const stats = activeSimulationManager.getSimulationStats();
+  const completedStats = activeSimulationManager.getCompletedSummaryStats();
+  const lotOccupancyPercent = activeParkingLot.getAverageOccupancyPercentage(time, TOTAL_SIMULATION_TIME).toFixed(1);
 
   return (
     <div className="App" style={{ position: 'relative' }}>
@@ -160,6 +184,50 @@ function App() {
             </div>
           </div>
           
+          {/* Handicapped Toggle Button in the Center */}
+          <div style={{ display: 'flex', alignItems: 'center' }}>
+            <button
+              onClick={toggleHandicappedMode}
+              style={{
+                background: isHandicappedMode ? '#ff6b6b' : '#4ecdc4',
+                color: '#fff',
+                border: 'none',
+                borderRadius: '8px',
+                padding: '12px 24px',
+                fontSize: '16px',
+                fontWeight: 'bold',
+                cursor: 'pointer',
+                boxShadow: '0 4px 12px rgba(0,0,0,0.2)',
+                transition: 'all 0.3s ease',
+                minWidth: '200px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '8px'
+              }}
+              onMouseEnter={(e) => {
+                e.target.style.transform = 'translateY(-2px)';
+                e.target.style.boxShadow = '0 6px 16px rgba(0,0,0,0.3)';
+              }}
+              onMouseLeave={(e) => {
+                e.target.style.transform = 'translateY(0)';
+                e.target.style.boxShadow = '0 4px 12px rgba(0,0,0,0.2)';
+              }}
+            >
+              {isHandicappedMode ? (
+                <>
+                  <span style={{ fontSize: '20px' }}>♿</span>
+                  Show "No Handicapped Space" Simulation
+                </>
+              ) : (
+                <>
+                  <span style={{ fontSize: '20px' }}>🚗</span>
+                  Show "Handicapped Space"
+                </>
+              )}
+            </button>
+          </div>
+          
           {/* Summary Statistics on the Right */}
           <div style={{
             display: 'flex', 
@@ -195,16 +263,16 @@ function App() {
       }}>
         {/* Schedule Panel (left) */}
         <SchedulePanel 
-          scheduledCars={simulationManager.getScheduledCars()} 
+          scheduledCars={activeSimulationManager.getScheduledCars()} 
           currentTime={time}
-          formatArrivalTime={simulationManager.formatArrivalTime}
+          formatArrivalTime={activeSimulationManager.formatArrivalTime}
         />
         
         {/* Parking Lot in the center */}
         <div style={{ position: 'relative' }}>
           <ParkingLotComponent 
-            parkingLot={parkingLot} 
-            cars={simulationManager.getCars()}
+            parkingLot={activeParkingLot} 
+            cars={activeSimulationManager.getCars()}
             time={time}
             onCarHover={setHoveredCarInfo}
             onCarLeave={() => setHoveredCarInfo(null)}
@@ -213,9 +281,9 @@ function App() {
         
         {/* Completed Cars Panel (right) */}
         <CompletedCarsPanel 
-          completedCars={simulationManager.getCompletedCars()} 
+          completedCars={activeSimulationManager.getCompletedCars()} 
           formatTime={formatTime}
-          formatArrivalTime={simulationManager.formatArrivalTime}
+          formatArrivalTime={activeSimulationManager.formatArrivalTime}
         />
                 
         {/* Optionally, show hovered car info as a floating tooltip */}
@@ -238,7 +306,7 @@ function App() {
             </div>
             <div>ID: {hoveredCarInfo.id}</div>
             <div>Status: {hoveredCarInfo.status}</div>
-            <div>Arrival: {simulationManager.formatArrivalTime(hoveredCarInfo.arrivalTime)}</div>
+            <div>Arrival: {activeSimulationManager.formatArrivalTime(hoveredCarInfo.arrivalTime)}</div>
             {hoveredCarInfo.person && (
               <>
                 <div style={{ marginTop: '8px', fontWeight: 'bold' }}>
