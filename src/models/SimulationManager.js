@@ -84,14 +84,7 @@ export class SimulationManager {
     );
 
     carsToArrive.forEach(({ car, person }) => {
-      // Check if this car was previously delayed
-      const wasDelayed = car.actualArrivalTime === null && car.arrivalTime > 0;
-      
-      if (wasDelayed) {
-        console.log(`🚗 Car ${car.id} finally arriving at time ${this.currentTime}s (was previously delayed)`);
-      } else {
-        console.log(`🚗 Car ${car.id} arriving at time ${this.currentTime}s`);
-      }
+      console.log(`🚗 Car ${car.id} arriving at time ${this.currentTime}s`);
       
       car.arrive(this.currentTime, this.parkingLot);
       

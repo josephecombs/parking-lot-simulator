@@ -76,6 +76,9 @@ export class Car {
         this.person.addFullLotDelay(delaySeconds);
       }
       
+      // DEBUGGING: Log detailed parking lot state when delay occurs
+      this.logParkingLotState(currentTime, parkingLot);
+      
       console.warn(`🚫 Car ${this.id} could not find an available space at ${originalArrivalTime}s!`);
       console.log(`⏰ Rescheduling car ${this.id} to arrive at ${this.arrivalTime}s (delayed by ${delaySeconds}s)`);
       
@@ -85,7 +88,58 @@ export class Car {
       this.targetSpace = null;
       this.x = 0;
       this.y = 0;
+      
+      // RAISE EXCEPTION for debugging
+      throw new Error(`PARKING LOT FULL DELAY: Car ${this.id} could not find space at time ${currentTime}s. Check console for detailed lot state.`);
     }
+  }
+
+  logParkingLotState(currentTime, parkingLot) {
+    console.error('🚨 PARKING LOT FULL - DETAILED STATE LOG 🚨');
+    console.error(`Time: ${currentTime}s`);
+    console.error(`Total spaces: ${parkingLot.getSpaces().length}`);
+    
+    const allSpaces = parkingLot.getSpaces();
+    const occupiedSpaces = allSpaces.filter(space => !space.isAvailable());
+    const availableSpaces = allSpaces.filter(space => space.isAvailable());
+    const handicappedSpaces = allSpaces.filter(space => space.handicapped);
+    const occupiedHandicappedSpaces = handicappedSpaces.filter(space => !space.isAvailable());
+    const availableHandicappedSpaces = handicappedSpaces.filter(space => space.isAvailable());
+    
+    console.error(`Occupied spaces: ${occupiedSpaces.length}/${allSpaces.length}`);
+    console.error(`Available spaces: ${availableSpaces.length}/${allSpaces.length}`);
+    console.error(`Handicapped spaces: ${handicappedSpaces.length}`);
+    console.error(`Occupied handicapped spaces: ${occupiedHandicappedSpaces.length}`);
+    console.error(`Available handicapped spaces: ${availableHandicappedSpaces.length}`);
+    
+    // Check if this car is handicapped
+    const isHandicapped = this.person && this.person.isHandicapped();
+    console.error(`This car is handicapped: ${isHandicapped}`);
+    
+    // Log details of each occupied space
+    console.error('📋 OCCUPIED SPACES DETAILS:');
+    occupiedSpaces.forEach((space, index) => {
+      const car = space.occupiedBy;
+      const carInfo = car ? {
+        id: car.id,
+        status: car.status,
+        personHandicapped: car.person ? car.person.isHandicapped() : 'unknown'
+      } : 'No car reference';
+      
+      console.error(`  Space ${index + 1}: Handicapped=${space.handicapped}, Car=${JSON.stringify(carInfo)}`);
+    });
+    
+    // Log details of each available space
+    console.error('✅ AVAILABLE SPACES DETAILS:');
+    availableSpaces.forEach((space, index) => {
+      console.error(`  Space ${index + 1}: Handicapped=${space.handicapped}`);
+    });
+    
+    // Calculate and log occupancy statistics
+    const avgOccupancy = parkingLot.getAverageOccupancyPercentage(currentTime, 3600);
+    console.error(`Average lot occupancy: ${avgOccupancy.toFixed(2)}%`);
+    
+    console.error('🚨 END PARKING LOT STATE LOG 🚨');
   }
 
   findAndClaimClosestSpace(parkingLot) {
@@ -100,12 +154,22 @@ export class Car {
       console.log(`Car ${this.id} is handicapped - can select any available space`);
     } else {
       // Non-handicapped cars can only park in non-handicapped spaces
+      const beforeFilter = availableSpaces.length;
       availableSpaces = availableSpaces.filter(space => !space.handicapped);
-      console.log(`Car ${this.id} is not handicapped - can only select non-handicapped spaces`);
+      const afterFilter = availableSpaces.length;
+      console.log(`Car ${this.id} is not handicapped - filtered from ${beforeFilter} to ${afterFilter} available spaces`);
     }
     
     if (availableSpaces.length === 0) {
       console.warn(`No available ${isHandicapped ? '' : 'non-handicapped '}spaces for car ${this.id}`);
+      
+      // Additional debugging: log all spaces and their availability
+      const allSpaces = parkingLot.getSpaces();
+      console.error(`DEBUG: All ${allSpaces.length} spaces status:`);
+      allSpaces.forEach((space, index) => {
+        console.error(`  Space ${index + 1}: Available=${space.isAvailable()}, Handicapped=${space.handicapped}, Occupied=${space.isOccupied}, OccupiedBy=${space.occupiedBy ? space.occupiedBy.id : 'null'}`);
+      });
+      
       return;
     }
 

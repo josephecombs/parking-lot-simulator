@@ -121,7 +121,7 @@ function App() {
             </div>
           </div>
         </div>
-        <p>Interactive parking lot simulation with dynamic spaces</p>
+        <p>Interactive parking lot simulation - ORIGINAL SCHOLARSHIP</p>
         <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 16 }}>
           {/* Simulation Controls and Demographic Stats on the Left */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
