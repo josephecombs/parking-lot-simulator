@@ -60,7 +60,19 @@ export class Car {
     if (this.targetSpace) {
       this.startDriving(currentTime);
     } else {
-      console.warn(`Car ${this.id} could not find an available space!`);
+      // All spaces are occupied - add a minute to arrival time and reschedule
+      const originalArrivalTime = this.arrivalTime;
+      this.arrivalTime += 60; // Add 60 seconds (1 minute)
+      
+      console.warn(`🚫 Car ${this.id} could not find an available space at ${originalArrivalTime}s!`);
+      console.log(`⏰ Rescheduling car ${this.id} to arrive at ${this.arrivalTime}s (delayed by 1 minute)`);
+      
+      // Reset car status to scheduled so it can be rescheduled
+      this.status = 'scheduled';
+      this.actualArrivalTime = null;
+      this.targetSpace = null;
+      this.x = 0;
+      this.y = 0;
     }
   }
 

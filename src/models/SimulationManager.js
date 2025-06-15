@@ -84,13 +84,25 @@ export class SimulationManager {
     );
 
     carsToArrive.forEach(({ car, person }) => {
-      console.log(`🚗 Car ${car.id} arriving at time ${this.currentTime}s`);
+      // Check if this car was previously delayed
+      const wasDelayed = car.actualArrivalTime === null && car.arrivalTime > 0;
+      
+      if (wasDelayed) {
+        console.log(`🚗 Car ${car.id} finally arriving at time ${this.currentTime}s (was previously delayed)`);
+      } else {
+        console.log(`🚗 Car ${car.id} arriving at time ${this.currentTime}s`);
+      }
+      
       car.arrive(this.currentTime, this.parkingLot);
-      this.cars.push(car);
-      this.people.push(person);
+      
+      // Only add to active cars if the car successfully found a space
+      if (car.getStatus() !== 'scheduled') {
+        this.cars.push(car);
+        this.people.push(person);
+      }
     });
 
-    // Remove arrived cars from scheduled list
+    // Remove arrived cars from scheduled list (only if they're no longer scheduled)
     this.scheduledCars = this.scheduledCars.filter(({ car }) => car.getStatus() === 'scheduled');
 
     // Update positions of moving cars
