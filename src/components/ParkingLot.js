@@ -59,14 +59,14 @@ const ParkingLot = ({ parkingLot, cars = [], time = 0, onCarHover, onCarLeave })
           <span style={{fontSize: '0.8rem', fontWeight: 400, marginTop: 2}}>ENTRANCE</span>
         </div>
 
-        `{/* Entrance */}
+        {/* Entrance */}
         <div
           className="entrance"
           style={{
             position: 'absolute',
             left: entrance.x,
-            top: entrance.y,
-            // height: entrance.height + 20, // Adjusted height
+            top: '50%',
+            transform: 'translateY(-50%)',
             backgroundColor: '#28a745',
             border: '2px solid #1e7e34',
             borderTopRightRadius: '6px',
@@ -88,7 +88,7 @@ const ParkingLot = ({ parkingLot, cars = [], time = 0, onCarHover, onCarLeave })
         >
           ENTRANCE
         </div>
-`
+
         {/* Exit */}
         <div
           className="exit"
