@@ -386,7 +386,6 @@ function App() {
                     color: '#fff'
                   }}>
                     <span>Cars: {stats.totalCars}</span>
-                    <span>People: {stats.totalPeople}</span>
                     <span>Occupied: {stats.occupiedSpaces}</span>
                     <span>Available: {stats.availableSpaces}</span>
                   </div>
