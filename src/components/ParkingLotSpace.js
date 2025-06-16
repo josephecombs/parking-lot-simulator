@@ -14,6 +14,33 @@ const ParkingLotSpace = ({ space, isLast, onSpaceHover, onSpaceLeave, time }) =>
   // Set background color based on handicapped status
   const backgroundColor = space.handicapped ? '#87CEEB' : 'transparent'; // Light blue for handicapped
 
+  // Create handicapped symbol background for unoccupied handicapped spots
+  const getBackgroundStyle = () => {
+    if (space.handicapped && !space.isOccupied) {
+      // Create a data URL for the handicapped symbol
+      const symbol = '♿';
+      const canvas = document.createElement('canvas');
+      const ctx = canvas.getContext('2d');
+      canvas.width = 24;
+      canvas.height = 24;
+      ctx.font = '20px Arial';
+      ctx.fillStyle = 'rgba(255, 255, 255, 0.8)';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(symbol, 12, 12);
+      
+      const dataURL = canvas.toDataURL();
+      
+      return {
+        backgroundImage: `url(${dataURL})`,
+        backgroundSize: '20px 20px',
+        backgroundPosition: 'center',
+        backgroundRepeat: 'no-repeat',
+      };
+    }
+    return {};
+  };
+
   return (
     <div
       className={`parking-space ${space.isOccupied ? 'occupied' : 'available'}`}
@@ -39,20 +66,26 @@ const ParkingLotSpace = ({ space, isLast, onSpaceHover, onSpaceLeave, time }) =>
         cursor: 'pointer',
         transition: 'box-shadow 0.2s',
         boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
+        ...getBackgroundStyle(),
       }}
       onMouseEnter={onSpaceHover}
       onMouseLeave={onSpaceLeave}
     >
-      <span className="walk-distance" style={{ 
-        marginBottom: '4px',
-        background: 'white',
-        color: '#222',
-        borderRadius: 4,
-        padding: '0 4px',
-        fontWeight: 600,
-        fontSize: '0.8rem',
-        boxShadow: '0 1px 4px rgba(0,0,0,0.08)'
-      }}>{Math.round(walkDistance)}</span>
+      <span 
+        className="walk-distance" 
+        style={{ 
+          marginBottom: '4px',
+          background: 'white',
+          color: '#222',
+          borderRadius: 4,
+          padding: '0 4px',
+          fontWeight: 600,
+          fontSize: '0.8rem',
+          boxShadow: '0 1px 4px rgba(0,0,0,0.08)'
+        }}
+      >
+
+      </span>
     </div>
   );
 };
