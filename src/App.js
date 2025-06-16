@@ -191,7 +191,24 @@ function App() {
     // Regenerate schedule
     const newSchedule = generateSharedSchedule(newNumCars);
     setSharedSchedule(newSchedule);
-    // Update simulation managers
+    // FULL RESET: clear all cars, people, completedCars, and vacate all spaces in both lots
+    [simulationManagerWithHandicapped, simulationManagerWithoutHandicapped].forEach(manager => {
+      // Remove all cars from spaces
+      manager.cars.forEach(car => car.leave && car.leave());
+      // Clear arrays
+      manager.cars = [];
+      manager.people = [];
+      manager.completedCars = [];
+      // Vacate all spaces in the lot
+      manager.parkingLot.getSpaces().forEach(space => {
+        space.vacate && space.vacate(0);
+        space.occupancyHistory = [];
+        space.totalOccupiedTime = 0;
+        space.occupancyCount = 0;
+        space.currentOccupancyStart = null;
+      });
+    });
+    // Update simulation managers with new schedule
     simulationManagerWithHandicapped.scheduledCars = newSchedule.map(({ car, person }) => {
       const clonedCar = cloneCar(car);
       const clonedPerson = clonePerson(person);
