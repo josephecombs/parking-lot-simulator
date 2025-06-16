@@ -131,11 +131,6 @@ function App() {
   // Generate the shared schedule once with initial numCars
   const [sharedSchedule, setSharedSchedule] = useState(() => generateSharedSchedule(numCars));
   
-  // Update shared schedule when numCars changes
-  useEffect(() => {
-    setSharedSchedule(generateSharedSchedule(numCars));
-  }, [numCars]);
-  
   // Create two parking lots - one with handicapped spaces, one without
   const [parkingLotWithHandicapped] = useState(() => new ParkingLot(1000, 500));
   const [parkingLotWithoutHandicapped] = useState(() => {
@@ -188,26 +183,42 @@ function App() {
     return manager;
   });
 
-  // Update walk speed penalty when it changes
-  useEffect(() => {
-    // Update walk speed for all handicapped people in both simulations
-    const updateWalkSpeeds = (manager) => {
-      manager.scheduledCars.forEach(({ person }) => {
-        if (person.handicapped) {
-          person.setWalkSpeedPenalty(handicappedWalkSpeedPenalty);
-        }
-      });
-      manager.people.forEach(person => {
-        if (person.handicapped) {
-          person.setWalkSpeedPenalty(handicappedWalkSpeedPenalty);
-        }
-      });
-    };
-    
-    updateWalkSpeeds(simulationManagerWithHandicapped);
-    updateWalkSpeeds(simulationManagerWithoutHandicapped);
-  }, [handicappedWalkSpeedPenalty, simulationManagerWithHandicapped, simulationManagerWithoutHandicapped]);
-  
+  // Helper to restart simulation with new options
+  const restartSimulationWithOptions = (newPenalty, newNumCars) => {
+    // Update state
+    setHandicappedWalkSpeedPenalty(newPenalty);
+    setNumCars(newNumCars);
+    // Regenerate schedule
+    const newSchedule = generateSharedSchedule(newNumCars);
+    setSharedSchedule(newSchedule);
+    // Update simulation managers
+    simulationManagerWithHandicapped.scheduledCars = newSchedule.map(({ car, person }) => {
+      const clonedCar = cloneCar(car);
+      const clonedPerson = clonePerson(person);
+      if (clonedPerson.handicapped) {
+        clonedPerson.setWalkSpeedPenalty(newPenalty);
+      }
+      clonedPerson.setCar(clonedCar);
+      return { car: clonedCar, person: clonedPerson };
+    });
+    simulationManagerWithoutHandicapped.scheduledCars = newSchedule.map(({ car, person }) => {
+      const clonedCar = cloneCar(car);
+      const clonedPerson = clonePerson(person);
+      if (clonedPerson.handicapped) {
+        clonedPerson.setWalkSpeedPenalty(newPenalty);
+      }
+      clonedPerson.setCar(clonedCar);
+      return { car: clonedCar, person: clonedPerson };
+    });
+    // Reset time and start simulation
+    setTime(0);
+    simulationManagerWithHandicapped.setCurrentTime(0);
+    simulationManagerWithoutHandicapped.setCurrentTime(0);
+    setIsSimulationRunning(true);
+    simulationManagerWithHandicapped.startSimulation();
+    simulationManagerWithoutHandicapped.startSimulation();
+  };
+
   // State to track which simulation is visible
   const [isHandicappedMode, setIsHandicappedMode] = useState(true);
   
@@ -436,7 +447,7 @@ function App() {
                         ].map(({ value, label }) => (
                           <button
                             key={value}
-                            onClick={() => setHandicappedWalkSpeedPenalty(value)}
+                            onClick={() => restartSimulationWithOptions(value, numCars)}
                             style={{
                               background: handicappedWalkSpeedPenalty === value ? '#ffd700' : 'rgba(255,255,255,0.15)',
                               color: handicappedWalkSpeedPenalty === value ? '#222' : '#fff',
@@ -461,7 +472,7 @@ function App() {
                         {[40, 60, 80, 100].map((value) => (
                           <button
                             key={value}
-                            onClick={() => setNumCars(value)}
+                            onClick={() => restartSimulationWithOptions(handicappedWalkSpeedPenalty, value)}
                             style={{
                               background: numCars === value ? '#ffd700' : 'rgba(255,255,255,0.15)',
                               color: numCars === value ? '#222' : '#fff',
