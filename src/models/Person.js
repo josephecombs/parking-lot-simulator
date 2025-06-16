@@ -10,11 +10,12 @@ export class Person {
     this.handicapped = Math.random() < 0.12 ? true : false;
     
     // Set walk speed based on handicapped status
-    const baseWalkSpeed = 20; // pixels per second - reasonable walking speed
+    this.baseWalkSpeed = 20; // pixels per second - reasonable walking speed
+    this.walkSpeedPenalty = 1.3; // Default to 30% slower
 
     // THIS IS FUNDAMENTAL CONSTRAINT TO ENTIRE WELFARE ANALYSIS!!! 
     // HOW MUCH SLOWER DO THE HANDICAPPED ACTUALLY WALK THAN THE ABLE BODIED?
-    this.walkSpeed = this.handicapped ? baseWalkSpeed / 1.5 : baseWalkSpeed;
+    this.walkSpeed = this.handicapped ? this.baseWalkSpeed / this.walkSpeedPenalty : this.baseWalkSpeed;
     
     this.lotSpeed = 100; // pixels per second - slower movement in parking lot
     this.storeVisitTime = this.generateStoreVisitTime(); // in seconds
@@ -270,5 +271,13 @@ export class Person {
   // Handicapped status methods
   isHandicapped() {
     return this.handicapped;
+  }
+
+  setWalkSpeedPenalty(penalty) {
+    this.walkSpeedPenalty = penalty;
+    // Update walk speed if handicapped
+    if (this.handicapped) {
+      this.walkSpeed = this.baseWalkSpeed / this.walkSpeedPenalty;
+    }
   }
 } 

@@ -11,8 +11,7 @@ import About from './components/About';
 import './App.css';
 
 // Shared schedule generator to ensure both simulations get identical schedules
-const generateSharedSchedule = () => {
-  const numCars = 80;
+const generateSharedSchedule = (numCars = 80) => {
   const maxArrivalTime = 45 * 60; // 45 minutes in seconds
   const scheduledCars = [];
   
@@ -125,8 +124,17 @@ const formatArrivalTime = (seconds) => {
 };
 
 function App() {
-  // Generate the shared schedule once
-  const [sharedSchedule] = useState(() => generateSharedSchedule());
+  // State for simulation controls
+  const [handicappedWalkSpeedPenalty, setHandicappedWalkSpeedPenalty] = useState(1.3); // 30% slower by default
+  const [numCars, setNumCars] = useState(80); // 80 cars by default
+  
+  // Generate the shared schedule once with initial numCars
+  const [sharedSchedule, setSharedSchedule] = useState(() => generateSharedSchedule(numCars));
+  
+  // Update shared schedule when numCars changes
+  useEffect(() => {
+    setSharedSchedule(generateSharedSchedule(numCars));
+  }, [numCars]);
   
   // Create two parking lots - one with handicapped spaces, one without
   const [parkingLotWithHandicapped] = useState(() => new ParkingLot(1000, 500));
@@ -147,6 +155,11 @@ function App() {
       const clonedCar = cloneCar(car);
       const clonedPerson = clonePerson(person);
       
+      // Set the handicapped walk speed penalty
+      if (clonedPerson.handicapped) {
+        clonedPerson.setWalkSpeedPenalty(handicappedWalkSpeedPenalty);
+      }
+      
       // Associate the cloned car and person
       clonedPerson.setCar(clonedCar);
       
@@ -162,6 +175,11 @@ function App() {
       const clonedCar = cloneCar(car);
       const clonedPerson = clonePerson(person);
       
+      // Set the handicapped walk speed penalty
+      if (clonedPerson.handicapped) {
+        clonedPerson.setWalkSpeedPenalty(handicappedWalkSpeedPenalty);
+      }
+      
       // Associate the cloned car and person
       clonedPerson.setCar(clonedCar);
       
@@ -169,6 +187,26 @@ function App() {
     });
     return manager;
   });
+
+  // Update walk speed penalty when it changes
+  useEffect(() => {
+    // Update walk speed for all handicapped people in both simulations
+    const updateWalkSpeeds = (manager) => {
+      manager.scheduledCars.forEach(({ person }) => {
+        if (person.handicapped) {
+          person.setWalkSpeedPenalty(handicappedWalkSpeedPenalty);
+        }
+      });
+      manager.people.forEach(person => {
+        if (person.handicapped) {
+          person.setWalkSpeedPenalty(handicappedWalkSpeedPenalty);
+        }
+      });
+    };
+    
+    updateWalkSpeeds(simulationManagerWithHandicapped);
+    updateWalkSpeeds(simulationManagerWithoutHandicapped);
+  }, [handicappedWalkSpeedPenalty, simulationManagerWithHandicapped, simulationManagerWithoutHandicapped]);
   
   // State to track which simulation is visible
   const [isHandicappedMode, setIsHandicappedMode] = useState(true);
@@ -243,13 +281,8 @@ function App() {
     simulationManagerWithoutHandicapped.pauseSimulation();
   };
 
-  const resetSimulation = () => {
-    setTime(0);
-    simulationManagerWithHandicapped.setCurrentTime(0);
-    simulationManagerWithoutHandicapped.setCurrentTime(0);
-    setIsSimulationRunning(false);
-    simulationManagerWithHandicapped.resetSimulation();
-    simulationManagerWithoutHandicapped.resetSimulation();
+  const reloadPage = () => {
+    window.location.reload();
   };
 
   const toggleHandicappedMode = () => {
@@ -373,11 +406,80 @@ function App() {
                       Pause
                     </button>
                     <button 
-                      onClick={resetSimulation}
+                      onClick={reloadPage}
                       style={{ padding: '8px 16px', fontSize: '14px' }}
                     >
-                      Reset
+                      Reload
                     </button>
+                  </div>
+                  {/* New Controls */}
+                  <div style={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: 12,
+                    background: 'rgba(255,255,255,0.13)',
+                    padding: '10px 18px',
+                    borderRadius: '12px',
+                    marginTop: '8px',
+                    width: 'fit-content',
+                    minWidth: 0,
+                    alignSelf: 'flex-start',
+                    boxShadow: '0 2px 8px rgba(44,62,80,0.07)'
+                  }}>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+                      <label style={{ fontSize: '12px', color: '#fff', opacity: 0.8 }}>Handicapped Walk Speed Penalty</label>
+                      <div style={{ display: 'flex', gap: 8 }}>
+                        {[
+                          { value: 1.1, label: '10% slower' },
+                          { value: 1.3, label: '30% slower' },
+                          { value: 1.5, label: '50% slower' }
+                        ].map(({ value, label }) => (
+                          <button
+                            key={value}
+                            onClick={() => setHandicappedWalkSpeedPenalty(value)}
+                            style={{
+                              background: handicappedWalkSpeedPenalty === value ? '#ffd700' : 'rgba(255,255,255,0.15)',
+                              color: handicappedWalkSpeedPenalty === value ? '#222' : '#fff',
+                              border: 'none',
+                              borderRadius: 4,
+                              padding: '4px 8px',
+                              fontSize: 12,
+                              cursor: 'pointer',
+                              outline: handicappedWalkSpeedPenalty === value ? '2px solid #ffd700' : 'none',
+                              boxShadow: handicappedWalkSpeedPenalty === value ? '0 0 6px #ffd70088' : 'none',
+                              transition: 'all 0.15s',
+                            }}
+                          >
+                            {label}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+                      <label style={{ fontSize: '12px', color: '#fff', opacity: 0.8 }}>Number of Cars</label>
+                      <div style={{ display: 'flex', gap: 8 }}>
+                        {[40, 60, 80, 100].map((value) => (
+                          <button
+                            key={value}
+                            onClick={() => setNumCars(value)}
+                            style={{
+                              background: numCars === value ? '#ffd700' : 'rgba(255,255,255,0.15)',
+                              color: numCars === value ? '#222' : '#fff',
+                              border: 'none',
+                              borderRadius: 4,
+                              padding: '4px 8px',
+                              fontSize: 12,
+                              cursor: 'pointer',
+                              outline: numCars === value ? '2px solid #ffd700' : 'none',
+                              boxShadow: numCars === value ? '0 0 6px #ffd70088' : 'none',
+                              transition: 'all 0.15s',
+                            }}
+                          >
+                            {value}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
                   </div>
                   <div style={{ 
                     display: 'flex', 
