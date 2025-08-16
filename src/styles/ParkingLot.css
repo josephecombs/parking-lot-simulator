@@ -56,7 +56,7 @@
 }
 
 /* Mobile-first responsive design - override explicit dimensions on small screens */
-@media (max-width: 480px) {
+@media (max-width: 600px) {
   .parking-lot {
     width: 100vw !important;
     height: 50vw !important; /* Half the height */
@@ -66,6 +66,6 @@
   
   .parking-lot-container {
     padding: 10px;
-    margin-top: 32px;
+    margin-top: 20px;
   }
 } 

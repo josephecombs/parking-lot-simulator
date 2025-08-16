@@ -76,18 +76,31 @@ main {
 }
 
 /* Mobile-first responsive design - hide desktop elements on small screens */
-@media (max-width: 480px) {
+@media (max-width: 600px) {
   .desktop {
     display: none !important;
   }
   
-  .mobile {
+  /* .mobile {
     display: block !important;
+  } */
+  
+  /* Make headers sticky only on mobile */
+  .App-header {
+    position: sticky;
+    top: 0;
+    z-index: 1001;
+  }
+  
+  .mobile-header {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
   }
 }
 
 /* Hide mobile elements on larger screens */
-@media (min-width: 481px) {
+@media (min-width: 601px) {
   .mobile {
     display: none !important;
   }
@@ -95,8 +108,6 @@ main {
 
 /* Mobile floating header styles */
 .mobile-header {
-  position: fixed;
-  top: 80px; /* Below the main header */
   left: 0;
   right: 0;
   background: rgba(255, 255, 255, 0.95);
