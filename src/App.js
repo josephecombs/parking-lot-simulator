@@ -301,21 +301,91 @@ function App() {
   // Calculate scaling factor on page load and window resize
   useEffect(() => {
     const calculateScalingFactor = () => {
-      const screenWidth = window.innerWidth;
-      const trueScreenWidth = screenWidth - 24; // Account for 20px padding
+      // Try multiple methods to get the most accurate viewport width
+      let screenWidth = window.innerWidth;
+      
+      // Method 1: Use visualViewport API if available (more reliable for mobile simulation)
+      if (window.visualViewport) {
+        screenWidth = window.visualViewport.width;
+      }
+      
+      // Method 2: Try to get the actual container width from the DOM
+      const container = document.querySelector('.parking-lot-container');
+      if (container) {
+        const rect = container.getBoundingClientRect();
+        if (rect.width > 0) {
+          // Use the container's actual available width
+          screenWidth = rect.width;
+        }
+      }
+      
+      const trueScreenWidth = screenWidth - 24; // Account for padding
       const baseWidth = 1000;
       const factor = Math.min(trueScreenWidth / baseWidth, 1); // Don't scale up beyond 1.0
       setScalingFactor(factor);
-      console.log(`📱 True screen width: ${trueScreenWidth}px, Scaling factor: ${factor.toFixed(2)}`);
+      
+      // Enhanced logging for debugging
+      console.log(`📱 Scaling Factor Debug:`);
+      console.log(`  - window.innerWidth: ${window.innerWidth}px`);
+      console.log(`  - visualViewport.width: ${window.visualViewport ? window.visualViewport.width : 'N/A'}px`);
+      console.log(`  - container width: ${container ? container.getBoundingClientRect().width : 'N/A'}px`);
+      console.log(`  - final screenWidth: ${screenWidth}px`);
+      console.log(`  - trueScreenWidth: ${trueScreenWidth}px`);
+      console.log(`  - scaling factor: ${factor.toFixed(2)}`);
+      console.log(`  - user agent: ${navigator.userAgent}`);
+    };
+
+    // Wait for the container to be available before setting up observers
+    const setupObservers = () => {
+      const container = document.querySelector('.parking-lot-container');
+      if (!container) {
+        // Container not ready yet, try again in a bit
+        setTimeout(setupObservers, 100);
+        return;
+      }
+
+      // Method 3: Use ResizeObserver to detect container size changes
+      let resizeObserver;
+      if (window.ResizeObserver) {
+        resizeObserver = new ResizeObserver(() => {
+          // Debounce the calculation to avoid excessive updates
+          clearTimeout(resizeObserver.timeout);
+          resizeObserver.timeout = setTimeout(calculateScalingFactor, 100);
+        });
+        resizeObserver.observe(container);
+      }
+
+      // Store the observer for cleanup
+      return resizeObserver;
     };
 
     // Calculate on mount
     calculateScalingFactor();
     
-    // Recalculate on window resize
+    // Also calculate after a short delay to ensure DOM is ready
+    const initialDelay = setTimeout(calculateScalingFactor, 100);
+    
+    // Method 1: Listen for window resize
     window.addEventListener('resize', calculateScalingFactor);
     
-    return () => window.removeEventListener('resize', calculateScalingFactor);
+    // Method 2: Listen for visualViewport changes (better for mobile simulation)
+    if (window.visualViewport) {
+      window.visualViewport.addEventListener('resize', calculateScalingFactor);
+    }
+    
+    // Method 3: Set up ResizeObserver once container is available
+    let resizeObserver = setupObservers();
+    
+    return () => {
+      clearTimeout(initialDelay);
+      window.removeEventListener('resize', calculateScalingFactor);
+      if (window.visualViewport) {
+        window.visualViewport.removeEventListener('resize', calculateScalingFactor);
+      }
+      if (resizeObserver) {
+        resizeObserver.disconnect();
+      }
+    };
   }, []);
 
   const startSimulation = () => {
