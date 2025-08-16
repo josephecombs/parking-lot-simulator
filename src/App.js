@@ -302,10 +302,11 @@ function App() {
   useEffect(() => {
     const calculateScalingFactor = () => {
       const screenWidth = window.innerWidth;
+      const trueScreenWidth = screenWidth - 24; // Account for 20px padding
       const baseWidth = 1000;
-      const factor = Math.min(screenWidth / baseWidth, 1); // Don't scale up beyond 1.0
+      const factor = Math.min(trueScreenWidth / baseWidth, 1); // Don't scale up beyond 1.0
       setScalingFactor(factor);
-      console.log(`📱 Screen width: ${screenWidth}px, Scaling factor: ${factor.toFixed(2)}`);
+      console.log(`📱 True screen width: ${trueScreenWidth}px, Scaling factor: ${factor.toFixed(2)}`);
     };
 
     // Calculate on mount
@@ -666,10 +667,11 @@ function App() {
             
             <main style={{ 
               display: 'flex', 
+              // display: 'flex', 
               justifyContent: 'center', 
               alignItems: 'flex-start', 
               // gap: '20px',
-              padding: '20px',
+              // padding: '20px',
               // minHeight: 600
             }}>
               {/* Schedule Panel (left) */}
@@ -681,8 +683,7 @@ function App() {
                 />
               </div>
               
-              {/* Parking Lot in the center */}
-              <div style={{ position: 'relative' }}>
+              <div>
                 <ParkingLotComponent 
                   parkingLot={visibleParkingLot} 
                   cars={visibleSimulationManager.getCars()}
