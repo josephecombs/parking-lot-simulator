@@ -251,6 +251,8 @@ function App() {
   const [hoveredCarInfo, setHoveredCarInfo] = useState(null);
   const [simulationSpeed, setSimulationSpeed] = useState(32); // Default 32x
   const [showMobileModal, setShowMobileModal] = useState(false);
+  const [showScheduledModal, setShowScheduledModal] = useState(false);
+  const [showCompletedModal, setShowCompletedModal] = useState(false);
 
   // Total simulation time: 3600 seconds (1 hour)
   const TOTAL_SIMULATION_TIME = 3600;
@@ -319,7 +321,7 @@ function App() {
         }
       }
       
-      const trueScreenWidth = screenWidth - 24; // Account for padding
+      const trueScreenWidth = screenWidth; // Account for padding
       const baseWidth = 1000;
       const factor = Math.min(trueScreenWidth / baseWidth, 1); // Don't scale up beyond 1.0
       setScalingFactor(factor);
@@ -785,6 +787,79 @@ function App() {
                     ))}
                   </div>
                 </div>
+                
+                {/* Mobile Scheduled Cars Panel */}
+                <div className="mobile mobile-scheduled-cars">
+                  <div className="mobile-panel-header">
+                    <h3 className="mobile-panel-title">📅 Scheduled Cars ({visibleSimulationManager.getScheduledCars().length})</h3>
+                    <button 
+                      className="mobile-view-all-button"
+                      onClick={() => setShowScheduledModal(true)}
+                    >
+                      View All
+                    </button>
+                  </div>
+                  <div className="mobile-cars-grid">
+                    {visibleSimulationManager.getScheduledCars().slice(0, 5).map(({ car, person }, index) => {
+                      const arrivalTime = car.getArrivalTime();
+                      const isPastTime = arrivalTime <= time;
+                      
+                      return (
+                        <div
+                          key={car.id}
+                          className={`mobile-car-card ${isPastTime ? 'past-time' : ''}`}
+                          onClick={() => setShowScheduledModal(true)}
+                        >
+                          <span className="mobile-car-unicode">
+                            {car.getUnicodeChar()}
+                          </span>
+                          <div className="mobile-car-info">
+                            <span className="mobile-car-time">
+                              {visibleSimulationManager.formatArrivalTime(arrivalTime)}
+                            </span>
+                            <span className="mobile-car-number">#{index + 1}</span>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+                
+                {/* Mobile Completed Cars Panel */}
+                <div className="mobile mobile-completed-cars">
+                  <div className="mobile-panel-header">
+                    <h3 className="mobile-panel-title">✅ Exited Cars ({visibleSimulationManager.getCompletedCars().length})</h3>
+                    <button 
+                      className="mobile-view-all-button"
+                      onClick={() => setShowCompletedModal(true)}
+                    >
+                      View All
+                    </button>
+                  </div>
+                  <div className="mobile-cars-grid">
+                    {visibleSimulationManager.getCompletedCars().slice(0, 5).map(({ car, person }, index) => {
+                      const carInfo = car.getCarInfo();
+                      
+                      return (
+                        <div
+                          key={car.id}
+                          className="mobile-car-card completed"
+                          onClick={() => setShowCompletedModal(true)}
+                        >
+                          <span className="mobile-car-unicode">
+                            {car.getUnicodeChar()}
+                          </span>
+                          <div className="mobile-car-info">
+                            <span className="mobile-car-time">
+                              {visibleSimulationManager.formatArrivalTime(car.getArrivalTime())}
+                            </span>
+                            <span className="mobile-car-number">#{index + 1}</span>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
               </div>
               
               {/* Completed Cars Panel (right) */}
@@ -851,6 +926,137 @@ function App() {
                     <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
                     <p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
                     <p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</p>
+                  </div>
+                </div>
+              </div>
+            )}
+            
+            {/* Mobile Scheduled Cars Modal */}
+            {showScheduledModal && (
+              <div className="mobile-modal" onClick={() => setShowScheduledModal(false)}>
+                <div className="mobile-modal-content" onClick={(e) => e.stopPropagation()}>
+                  <div className="mobile-modal-header">
+                    <h3 className="mobile-modal-title">📅 All Scheduled Cars ({visibleSimulationManager.getScheduledCars().length})</h3>
+                    <button 
+                      className="mobile-modal-close"
+                      onClick={() => setShowScheduledModal(false)}
+                    >
+                      ×
+                    </button>
+                  </div>
+                  <div className="mobile-modal-cars-list">
+                    {visibleSimulationManager.getScheduledCars().map(({ car, person }, index) => {
+                      const arrivalTime = car.getArrivalTime();
+                      const isPastTime = arrivalTime <= time;
+                      
+                      return (
+                        <details key={car.id} className={`mobile-modal-car-item ${isPastTime ? 'past-time' : ''}`}>
+                          <summary className="mobile-modal-car-header">
+                            <span className="mobile-modal-car-unicode">
+                              {car.getUnicodeChar()}
+                            </span>
+                            <div className="mobile-modal-car-details">
+                              <div className="mobile-modal-car-time">
+                                Arrival: {visibleSimulationManager.formatArrivalTime(arrivalTime)}
+                              </div>
+                              <div className="mobile-modal-car-number">
+                                Car #{index + 1}
+                              </div>
+                              <div className="mobile-modal-car-status">
+                                Status: {isPastTime ? 'Arrived' : 'Scheduled'}
+                              </div>
+                            </div>
+                          </summary>
+                          
+                          <div className="mobile-modal-car-expanded">
+                            <div className="mobile-modal-car-info-section">
+                              <div className="mobile-modal-car-info-title">Car Details:</div>
+                              <div>ID: {car.id}</div>
+                              <div>Arrival: {visibleSimulationManager.formatArrivalTime(arrivalTime)}</div>
+                              <div>Status: {isPastTime ? 'Arrived' : 'Scheduled'}</div>
+                            </div>
+                            
+                            {person && (
+                              <div className="mobile-modal-car-info-section">
+                                <div className="mobile-modal-car-info-title">Person Info:</div>
+                                <div>Walk Speed: {person.walkSpeed} px/s</div>
+                                <div>Lot Speed: {person.lotSpeed} px/s</div>
+                                <div>Store Visit: {Math.floor(person.storeVisitTime / 60)}m {person.storeVisitTime % 60}s</div>
+                                <div>Handicapped: {person.handicapped ? 'Yes' : 'No'}</div>
+                              </div>
+                            )}
+                          </div>
+                        </details>
+                      );
+                    })}
+                  </div>
+                </div>
+              </div>
+            )}
+            
+            {/* Mobile Completed Cars Modal */}
+            {showCompletedModal && (
+              <div className="mobile-modal" onClick={() => setShowCompletedModal(false)}>
+                <div className="mobile-modal-content" onClick={(e) => e.stopPropagation()}>
+                  <div className="mobile-modal-header">
+                    <h3 className="mobile-modal-title">✅ All Exited Cars ({visibleSimulationManager.getCompletedCars().length})</h3>
+                    <button 
+                      className="mobile-modal-close"
+                      onClick={() => setShowCompletedModal(false)}
+                    >
+                      ×
+                    </button>
+                  </div>
+                  <div className="mobile-modal-cars-list">
+                    {visibleSimulationManager.getCompletedCars().map(({ car, person }, index) => {
+                      const carInfo = car.getCarInfo();
+                      
+                      return (
+                        <details key={car.id} className="mobile-modal-car-item completed">
+                          <summary className="mobile-modal-car-header">
+                            <span className="mobile-modal-car-unicode">
+                              {car.getUnicodeChar()}
+                            </span>
+                            <div className="mobile-modal-car-details">
+                              <div className="mobile-modal-car-time">
+                                Arrived: {visibleSimulationManager.formatArrivalTime(car.getArrivalTime())}
+                              </div>
+                              <div className="mobile-modal-car-duration">
+                                Duration: {carInfo.exitTime && carInfo.actualArrivalTime ? 
+                                  formatTime(Math.floor((carInfo.exitTime - carInfo.actualArrivalTime) / 1000)) : 'N/A'}
+                              </div>
+                              <div className="mobile-modal-car-number">
+                                Car #{index + 1}
+                              </div>
+                            </div>
+                          </summary>
+                          
+                          <div className="mobile-modal-car-expanded">
+                            <div className="mobile-modal-car-info-section">
+                              <div className="mobile-modal-car-info-title">Car Details:</div>
+                              <div>ID: {car.id}</div>
+                              <div>Scheduled: {visibleSimulationManager.formatArrivalTime(car.getArrivalTime())}</div>
+                              <div>Actual Arrival: {carInfo.actualArrivalTime ? formatTime(carInfo.actualArrivalTime) : 'N/A'}</div>
+                              <div>Exit Time: {carInfo.exitTime ? formatTime(carInfo.exitTime) : 'N/A'}</div>
+                              <div>Total Duration: {carInfo.exitTime && carInfo.actualArrivalTime ? 
+                                formatTime(Math.floor((carInfo.exitTime - carInfo.actualArrivalTime) / 1000)) : 'N/A'}</div>
+                            </div>
+                            
+                            {person && (
+                              <div className="mobile-modal-car-info-section">
+                                <div className="mobile-modal-car-info-title">Person Stats:</div>
+                                <div>Walk Speed: {person.walkSpeed} px/s</div>
+                                <div>Lot Speed: {person.lotSpeed} px/s</div>
+                                <div>Store Visit: {Math.floor(person.storeVisitTime / 60)}m {person.storeVisitTime % 60}s</div>
+                                <div>Total Walk Time: {person.accumulatedWalkTimeFormatted}</div>
+                                <div>Total Driving Time: {person.drivingTimeFormatted}</div>
+                                <div>Handicapped: {person.handicapped ? 'Yes' : 'No'}</div>
+                              </div>
+                            )}
+                          </div>
+                        </details>
+                      );
+                    })}
                   </div>
                 </div>
               </div>

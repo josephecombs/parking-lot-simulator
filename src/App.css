@@ -313,6 +313,248 @@ main {
   box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
 }
 
+/* Mobile Scheduled and Completed Cars Panels */
+.mobile-scheduled-cars,
+.mobile-completed-cars {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  border-radius: 12px;
+  padding: 12px;
+  margin: 12px 0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.mobile-panel-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.mobile-panel-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: #333;
+  margin: 0;
+}
+
+.mobile-view-all-button {
+  background: #667eea;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 6px 12px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: all 0.2s ease;
+}
+
+.mobile-view-all-button:hover {
+  background: #5a6fd8;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.mobile-cars-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 6px;
+}
+
+.mobile-car-card {
+  background: #f8f9fa;
+  border: 1px solid #dee2e6;
+  border-radius: 8px;
+  padding: 8px 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  min-height: 40px;
+}
+
+.mobile-car-card:hover {
+  background: #e9ecef;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.mobile-car-card.past-time {
+  background: #e9ecef;
+  opacity: 0.7;
+}
+
+.mobile-car-card.completed {
+  background: #d4edda;
+  border-color: #c3e6cb;
+}
+
+.mobile-car-unicode {
+  font-size: 18px;
+  filter: grayscale(0%);
+}
+
+.mobile-car-card.past-time .mobile-car-unicode {
+  filter: grayscale(100%);
+}
+
+.mobile-car-info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  text-align: center;
+}
+
+.mobile-car-time {
+  font-size: 9px;
+  font-weight: 600;
+  color: #495057;
+}
+
+.mobile-car-number {
+  font-size: 8px;
+  color: #6c757d;
+}
+
+/* Mobile Modal Cars List Styles */
+.mobile-modal-cars-list {
+  max-height: 60vh;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.mobile-modal-car-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  background: #f8f9fa;
+  border: 1px solid #dee2e6;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+}
+
+.mobile-modal-car-item:hover {
+  background: #e9ecef;
+}
+
+.mobile-modal-car-item.past-time {
+  background: #e9ecef;
+  opacity: 0.8;
+}
+
+.mobile-modal-car-item.completed {
+  background: #d4edda;
+  border-color: #c3e6cb;
+}
+
+.mobile-modal-car-unicode {
+  font-size: 28px;
+  min-width: 40px;
+  text-align: center;
+}
+
+.mobile-modal-car-item.past-time .mobile-modal-car-unicode {
+  filter: grayscale(100%);
+}
+
+.mobile-modal-car-details {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.mobile-modal-car-time,
+.mobile-modal-car-duration,
+.mobile-modal-car-number,
+.mobile-modal-car-status {
+  font-size: 13px;
+  color: #495057;
+}
+
+.mobile-modal-car-time {
+  font-weight: 600;
+}
+
+.mobile-modal-car-number {
+  color: #6c757d;
+  font-size: 12px;
+}
+
+/* Mobile Modal Expandable Car Sections */
+.mobile-modal-car-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 6px;
+  transition: background-color 0.2s ease;
+  list-style: none;
+}
+
+.mobile-modal-car-header:hover {
+  background: rgba(0, 0, 0, 0.05);
+}
+
+/* Remove default details/summary styling */
+details {
+  margin-bottom: 8px;
+}
+
+details > summary {
+  list-style: none;
+}
+
+details > summary::-webkit-details-marker {
+  display: none;
+}
+
+details > summary::marker {
+  display: none;
+}
+
+.mobile-modal-car-expanded {
+  margin-top: 12px;
+  padding: 12px;
+  background: rgba(102, 126, 234, 0.05);
+  border-radius: 8px;
+  border-left: 3px solid #667eea;
+}
+
+.mobile-modal-car-info-section {
+  margin-bottom: 16px;
+}
+
+.mobile-modal-car-info-section:last-child {
+  margin-bottom: 0;
+}
+
+.mobile-modal-car-info-title {
+  font-weight: 600;
+  color: #667eea;
+  margin-bottom: 8px;
+  font-size: 14px;
+  border-bottom: 1px solid rgba(102, 126, 234, 0.2);
+  padding-bottom: 4px;
+}
+
+.mobile-modal-car-expanded > div > div:not(.mobile-modal-car-info-title) {
+  font-size: 13px;
+  color: #495057;
+  margin-bottom: 4px;
+  line-height: 1.4;
+}
+
 .time-ticker {
   background: rgba(255,255,255,0.15);
   color: #fff;
