@@ -9,5 +9,5 @@ A.A.1) (There's a weird scroll under issue with the header created in A.1, so tr
 
 -PART A.1) in a floating header only visible on mobile (give a class "mobile" which is display: none on big screens), but below the real header, there should be 3 things:
     PART B) handicapped on off toggle (maybe a little square with a arrow PART C) handicapped unicode character (TURN ON), and the same with a no smoking sign and a handicapped character (TURN OFF))
-    PART D) some little stats comparison like we have now
+    PART D) put a MOBILE ONLY full width version of the time controls from the desktop header below the parking lot display. you should not need to write a new component to do this.
     PART E) a button with the word "CONTROLS" on it. have this open some modal that also only appears on mobile. put lorem ipsum in it for now. this is eventually where all the controls will go.

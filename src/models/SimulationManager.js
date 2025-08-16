@@ -167,7 +167,7 @@ export class SimulationManager {
   }
 
   startSimulation() {
-    return;
+    // return; JOE RETURN HERE
     this.isRunning = true;
     this.currentTime = 0;
   }

@@ -762,6 +762,29 @@ function App() {
                   onCarLeave={() => setHoveredCarInfo(null)}
                   scalingFactor={scalingFactor}
                 />
+                
+                {/* Mobile Time Controls - Full Width Below Parking Lot */}
+                <div className="mobile mobile-time-controls">
+                  <div className="mobile-time-display">
+                    <span className="mobile-time-label">Time:</span>
+                    <span className="mobile-time-value">{formatTime(time)}</span>
+                    <span className="mobile-time-separator">/</span>
+                    <span className="mobile-time-total">{formatTime(TOTAL_SIMULATION_TIME)}</span>
+                  </div>
+                  <div className="mobile-speed-controls">
+                    <span className="mobile-speed-label">Speed:</span>
+                    {[1, 4, 8, 16, 32].map((speed) => (
+                      <button
+                        key={speed}
+                        onClick={() => setSimulationSpeed(speed)}
+                        className={`mobile-speed-button ${simulationSpeed === speed ? 'active' : ''}`}
+                        aria-label={`Set simulation speed to ${speed}x`}
+                      >
+                        {speed}x
+                      </button>
+                    ))}
+                  </div>
+                </div>
               </div>
               
               {/* Completed Cars Panel (right) */}
