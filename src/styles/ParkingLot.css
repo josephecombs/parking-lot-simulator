@@ -31,41 +31,35 @@
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
 }
 
-/* Responsive design for smaller screens */
+/* Responsive design for smaller screens - now handled by JavaScript scaling factor */
 @media (max-width: 1100px) {
   .parking-lot-container {
     padding: 10px;
   }
-  
-  .parking-lot {
-    transform: scale(0.8);
-    transform-origin: center;
-  }
 }
 
 @media (max-width: 900px) {
-  .parking-lot {
-    transform: scale(0.7);
+  .parking-lot-container {
+    padding: 8px;
   }
 }
 
 @media (max-width: 700px) {
-  .parking-lot {
-    transform: scale(0.6);
+  .parking-lot-container {
+    padding: 6px;
   }
 }
 
-/* Mobile-first responsive design - override explicit dimensions on small screens */
+/* Mobile-first responsive design - ensure proper scaling */
 @media (max-width: 600px) {
-  .parking-lot {
-    width: 100vw !important;
-    height: 50vw !important; /* Half the height */
-    max-width: 100vw !important;
-    transform: none !important; /* Remove any scaling */
+  .parking-lot-container {
+    padding: 4px;
+    margin-top: 20px;
   }
   
-  .parking-lot-container {
-    /* padding: 10px; */
-    /* margin-top: 20px; */
+  /* Ensure the parking lot scales down properly on mobile */
+  .parking-lot {
+    max-width: 100%;
+    max-height: 100%;
   }
 } 

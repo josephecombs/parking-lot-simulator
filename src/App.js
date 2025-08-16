@@ -128,6 +128,9 @@ function App() {
   const [handicappedWalkSpeedPenalty, setHandicappedWalkSpeedPenalty] = useState(1.3); // 30% slower by default
   const [numCars, setNumCars] = useState(80); // 80 cars by default
   
+  // Calculate scaling factor based on screen width relative to 1000px
+  const [scalingFactor, setScalingFactor] = useState(1);
+  
   // Generate the shared schedule once with initial numCars
   const [sharedSchedule, setSharedSchedule] = useState(() => generateSharedSchedule(numCars));
   
@@ -294,6 +297,25 @@ function App() {
     }
     return () => clearInterval(interval);
   }, [isSimulationRunning, time, simulationManagerWithHandicapped, simulationManagerWithoutHandicapped, simulationSpeed]);
+
+  // Calculate scaling factor on page load and window resize
+  useEffect(() => {
+    const calculateScalingFactor = () => {
+      const screenWidth = window.innerWidth;
+      const baseWidth = 1000;
+      const factor = Math.min(screenWidth / baseWidth, 1); // Don't scale up beyond 1.0
+      setScalingFactor(factor);
+      console.log(`📱 Screen width: ${screenWidth}px, Scaling factor: ${factor.toFixed(2)}`);
+    };
+
+    // Calculate on mount
+    calculateScalingFactor();
+    
+    // Recalculate on window resize
+    window.addEventListener('resize', calculateScalingFactor);
+    
+    return () => window.removeEventListener('resize', calculateScalingFactor);
+  }, []);
 
   const startSimulation = () => {
     setTime(0);
@@ -667,6 +689,7 @@ function App() {
                   time={time}
                   onCarHover={setHoveredCarInfo}
                   onCarLeave={() => setHoveredCarInfo(null)}
+                  scalingFactor={scalingFactor}
                 />
               </div>
               
