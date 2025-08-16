@@ -523,6 +523,26 @@ details > summary::marker {
   display: none;
 }
 
+/* Fix width jumping by ensuring consistent modal width */
+.mobile-modal-content {
+  min-width: 90vw;
+  max-width: 90vw;
+  width: 90vw;
+}
+
+.mobile-modal-cars-list {
+  width: 100%;
+}
+
+.mobile-modal-car-item {
+  width: 100%;
+}
+
+.mobile-modal-car-expanded {
+  width: 100%;
+  box-sizing: border-box;
+}
+
 .mobile-modal-car-expanded {
   margin-top: 12px;
   padding: 12px;
