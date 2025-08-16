@@ -384,7 +384,7 @@ function App() {
               
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 24 }}>
                 <h1 style={{ margin: 0 }}>Parking Lot Simulator</h1>
-                <div className="time-ticker" style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
+                <div className="time-ticker desktop" style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
                   <span>
                     Time: <span>{formatTime(time)}</span> / {formatTime(TOTAL_SIMULATION_TIME)}
                   </span>
@@ -415,7 +415,7 @@ function App() {
                   </div>
                 </div>
               </div>
-              <p>Interactive parking lot simulation - ORIGINAL SCHOLARSHIP</p>
+              <p className='desktop'>Interactive parking lot simulation - ORIGINAL SCHOLARSHIP</p>
               <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 16 }}>
                 {/* Simulation Controls and Demographic Stats on the Left */}
                 <div className="desktop" style={{ display: 'flex', flexDirection: 'column', gap: 16, flex: 1 }}>
