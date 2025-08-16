@@ -94,7 +94,7 @@ main {
   
   .mobile-header {
     position: sticky;
-    top: 0;
+    top: 80px; /* Position below the main header */
     z-index: 1000;
   }
 }

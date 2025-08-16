@@ -416,7 +416,7 @@ function App() {
                 </div>
               </div>
               <p className='desktop'>Interactive parking lot simulation - ORIGINAL SCHOLARSHIP</p>
-              <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 16 }}>
+              <div className='desktop' style={{ display: 'flex', justifyContent: 'space-between', marginTop: 16 }}>
                 {/* Simulation Controls and Demographic Stats on the Left */}
                 <div className="desktop" style={{ display: 'flex', flexDirection: 'column', gap: 16, flex: 1 }}>
                   <div style={{ display: 'flex', gap: 16 }}>
@@ -646,9 +646,9 @@ function App() {
               display: 'flex', 
               justifyContent: 'center', 
               alignItems: 'flex-start', 
-              gap: '20px',
+              // gap: '20px',
               padding: '20px',
-              minHeight: 600 
+              // minHeight: 600
             }}>
               {/* Schedule Panel (left) */}
               <div className="desktop">
