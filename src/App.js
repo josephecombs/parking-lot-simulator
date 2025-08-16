@@ -247,6 +247,7 @@ function App() {
   const [isSimulationRunning, setIsSimulationRunning] = useState(false);
   const [hoveredCarInfo, setHoveredCarInfo] = useState(null);
   const [simulationSpeed, setSimulationSpeed] = useState(32); // Default 32x
+  const [showMobileModal, setShowMobileModal] = useState(false);
 
   // Total simulation time: 3600 seconds (1 hour)
   const TOTAL_SIMULATION_TIME = 3600;
@@ -388,7 +389,7 @@ function App() {
                     Time: <span>{formatTime(time)}</span> / {formatTime(TOTAL_SIMULATION_TIME)}
                   </span>
                   {/* Speed Controls */}
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 4, background: 'rgba(255,255,255,0.08)', borderRadius: 8, padding: '2px 8px' }}>
+                  <div className="desktop" style={{ display: 'flex', alignItems: 'center', gap: 4, background: 'rgba(255,255,255,0.08)', borderRadius: 8, padding: '2px 8px' }}>
                     {[1, 4, 8, 16, 32].map((speed) => (
                       <button
                         key={speed}
@@ -417,7 +418,7 @@ function App() {
               <p>Interactive parking lot simulation - ORIGINAL SCHOLARSHIP</p>
               <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 16 }}>
                 {/* Simulation Controls and Demographic Stats on the Left */}
-                <div style={{ display: 'flex', flexDirection: 'column', gap: 16, flex: 1 }}>
+                <div className="desktop" style={{ display: 'flex', flexDirection: 'column', gap: 16, flex: 1 }}>
                   <div style={{ display: 'flex', gap: 16 }}>
                     <button 
                       onClick={startSimulation} 
@@ -441,7 +442,7 @@ function App() {
                     </button>
                   </div>
                   {/* New Controls */}
-                  <div style={{
+                  <div className="desktop" style={{
                     display: 'flex',
                     flexDirection: 'column',
                     gap: 12,
@@ -509,7 +510,7 @@ function App() {
                       </div>
                     </div>
                   </div>
-                  <div style={{ 
+                  <div className="desktop" style={{ 
                     display: 'flex', 
                     gap: 24, 
                     fontSize: '14px',
@@ -522,7 +523,7 @@ function App() {
                 </div>
                 
                 {/* Handicapped Toggle Button in the Center */}
-                <div style={{ display: 'flex', alignItems: 'center', position: 'absolute', left: '50%', transform: 'translateX(-50%)' }}>
+                <div className="desktop" style={{ display: 'flex', alignItems: 'center', position: 'absolute', left: '50%', transform: 'translateX(-50%)' }}>
                   <button
                     onClick={toggleHandicappedMode}
                     style={{
@@ -558,7 +559,7 @@ function App() {
                       </>
                     ) : (
                       <>
-                        <span style={{ fontSize: '20px' }}>🚗</span>
+                        <span style={{ fontSize: '20px' }}>♿</span>
                         Show "Handicapped Space" Simulation
                       </>
                     )}
@@ -566,7 +567,7 @@ function App() {
                 </div>
                 
                 {/* Summary Statistics on the Right */}
-                <div style={{
+                <div className="desktop" style={{
                   display: 'flex', 
                   flexDirection: 'column',
                   alignItems: 'flex-end',
@@ -607,6 +608,40 @@ function App() {
                 </div>
               </div>
             </header>
+            
+            {/* Mobile Floating Header */}
+            <div className="mobile mobile-header">
+              <div className="mobile-controls">
+                <button 
+                  onClick={toggleHandicappedMode}
+                  style={{
+                    background: isHandicappedMode ? '#ff6b6b' : '#4ecdc4',
+                    color: '#fff',
+                    border: 'none',
+                    borderRadius: '6px',
+                    padding: '6px 12px',
+                    fontSize: '12px',
+                    fontWeight: '600',
+                    cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '4px'
+                  }}
+                >
+                  {isHandicappedMode ? '♿' : '🚗'}
+                </button>
+                <button 
+                  onClick={() => setShowMobileModal(true)}
+                  className="mobile-button"
+                >
+                  CONTROLS
+                </button>
+              </div>
+              <div className="mobile-stats">
+                Cars: {stats.totalCars} | Occupied: {stats.occupiedSpaces}
+              </div>
+            </div>
+            
             <main style={{ 
               display: 'flex', 
               justifyContent: 'center', 
@@ -616,11 +651,13 @@ function App() {
               minHeight: 600 
             }}>
               {/* Schedule Panel (left) */}
-              <SchedulePanel 
-                scheduledCars={visibleSimulationManager.getScheduledCars()} 
-                currentTime={time}
-                formatArrivalTime={visibleSimulationManager.formatArrivalTime}
-              />
+              <div className="desktop">
+                <SchedulePanel 
+                  scheduledCars={visibleSimulationManager.getScheduledCars()} 
+                  currentTime={time}
+                  formatArrivalTime={visibleSimulationManager.formatArrivalTime}
+                />
+              </div>
               
               {/* Parking Lot in the center */}
               <div style={{ position: 'relative' }}>
@@ -634,11 +671,13 @@ function App() {
               </div>
               
               {/* Completed Cars Panel (right) */}
-              <CompletedCarsPanel 
-                completedCars={visibleSimulationManager.getCompletedCars()} 
-                formatTime={formatTime}
-                formatArrivalTime={visibleSimulationManager.formatArrivalTime}
-              />
+              <div className="desktop">
+                <CompletedCarsPanel 
+                  completedCars={visibleSimulationManager.getCompletedCars()} 
+                  formatTime={formatTime}
+                  formatArrivalTime={visibleSimulationManager.formatArrivalTime}
+                />
+              </div>
                       
               {/* Optionally, show hovered car info as a floating tooltip */}
               {hoveredCarInfo && (
@@ -677,6 +716,28 @@ function App() {
                 </div>
               )}
             </main>
+            
+            {/* Mobile Controls Modal */}
+            {showMobileModal && (
+              <div className="mobile-modal" onClick={() => setShowMobileModal(false)}>
+                <div className="mobile-modal-content" onClick={(e) => e.stopPropagation()}>
+                  <div className="mobile-modal-header">
+                    <h3 className="mobile-modal-title">Simulation Controls</h3>
+                    <button 
+                      className="mobile-modal-close"
+                      onClick={() => setShowMobileModal(false)}
+                    >
+                      ×
+                    </button>
+                  </div>
+                  <div style={{ color: '#333', lineHeight: '1.6' }}>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+                    <p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+                    <p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</p>
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
         } />
         <Route path="/about" element={<About />} />

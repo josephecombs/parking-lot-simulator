@@ -75,6 +75,133 @@ main {
   }
 }
 
+/* Mobile-first responsive design - hide desktop elements on small screens */
+@media (max-width: 480px) {
+  .desktop {
+    display: none !important;
+  }
+  
+  .mobile {
+    display: block !important;
+  }
+}
+
+/* Hide mobile elements on larger screens */
+@media (min-width: 481px) {
+  .mobile {
+    display: none !important;
+  }
+}
+
+/* Mobile floating header styles */
+.mobile-header {
+  position: fixed;
+  top: 80px; /* Below the main header */
+  left: 0;
+  right: 0;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  padding: 12px 16px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+
+.mobile-header .mobile-controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.mobile-header .mobile-stats {
+  font-size: 12px;
+  color: #333;
+  font-weight: 500;
+}
+
+.mobile-header .mobile-button {
+  background: #667eea;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 8px 16px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: all 0.2s ease;
+}
+
+.mobile-header .mobile-button:hover {
+  background: #5a6fd8;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+/* Mobile modal styles */
+.mobile-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 2000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.mobile-modal-content {
+  background: white;
+  border-radius: 12px;
+  padding: 24px;
+  max-width: 90vw;
+  max-height: 80vh;
+  overflow-y: auto;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+.mobile-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.mobile-modal-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: #333;
+  margin: 0;
+}
+
+.mobile-modal-close {
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  color: #666;
+  padding: 0;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: all 0.2s ease;
+}
+
+.mobile-modal-close:hover {
+  background: #f0f0f0;
+  color: #333;
+}
+
 .time-ticker {
   background: rgba(255,255,255,0.15);
   color: #fff;
