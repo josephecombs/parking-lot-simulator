@@ -788,76 +788,32 @@ function App() {
                   </div>
                 </div>
                 
-                {/* Mobile Scheduled Cars Panel */}
-                <div className="mobile mobile-scheduled-cars">
-                  <div className="mobile-panel-header">
-                    <h3 className="mobile-panel-title">📅 Scheduled Cars ({visibleSimulationManager.getScheduledCars().length})</h3>
-                    <button 
-                      className="mobile-view-all-button"
-                      onClick={() => setShowScheduledModal(true)}
-                    >
-                      View All
-                    </button>
+                {/* Mobile Stats Row - Single Row with Both Panels */}
+                <div className="mobile mobile-stats-row">
+                  {/* Mobile Scheduled Cars Panel - Left Side */}
+                  <div className="mobile mobile-scheduled-cars">
+                    <div className="mobile-panel-header">
+                      <h3 className="mobile-panel-title">📅 Scheduled ({visibleSimulationManager.getScheduledCars().length})</h3>
+                      <button 
+                        className="mobile-view-all-button"
+                        onClick={() => setShowScheduledModal(true)}
+                      >
+                        View All
+                      </button>
+                    </div>
                   </div>
-                  <div className="mobile-cars-grid">
-                    {visibleSimulationManager.getScheduledCars().slice(0, 5).map(({ car, person }, index) => {
-                      const arrivalTime = car.getArrivalTime();
-                      const isPastTime = arrivalTime <= time;
-                      
-                      return (
-                        <div
-                          key={car.id}
-                          className={`mobile-car-card ${isPastTime ? 'past-time' : ''}`}
-                          onClick={() => setShowScheduledModal(true)}
-                        >
-                          <span className="mobile-car-unicode">
-                            {car.getUnicodeChar()}
-                          </span>
-                          <div className="mobile-car-info">
-                            <span className="mobile-car-time">
-                              {visibleSimulationManager.formatArrivalTime(arrivalTime)}
-                            </span>
-                            <span className="mobile-car-number">#{index + 1}</span>
-                          </div>
-                        </div>
-                      );
-                    })}
-                  </div>
-                </div>
-                
-                {/* Mobile Completed Cars Panel */}
-                <div className="mobile mobile-completed-cars">
-                  <div className="mobile-panel-header">
-                    <h3 className="mobile-panel-title">✅ Exited Cars ({visibleSimulationManager.getCompletedCars().length})</h3>
-                    <button 
-                      className="mobile-view-all-button"
-                      onClick={() => setShowCompletedModal(true)}
-                    >
-                      View All
-                    </button>
-                  </div>
-                  <div className="mobile-cars-grid">
-                    {visibleSimulationManager.getCompletedCars().slice(0, 5).map(({ car, person }, index) => {
-                      const carInfo = car.getCarInfo();
-                      
-                      return (
-                        <div
-                          key={car.id}
-                          className="mobile-car-card completed"
-                          onClick={() => setShowCompletedModal(true)}
-                        >
-                          <span className="mobile-car-unicode">
-                            {car.getUnicodeChar()}
-                          </span>
-                          <div className="mobile-car-info">
-                            <span className="mobile-car-time">
-                              {visibleSimulationManager.formatArrivalTime(car.getArrivalTime())}
-                            </span>
-                            <span className="mobile-car-number">#{index + 1}</span>
-                          </div>
-                        </div>
-                      );
-                    })}
+                  
+                  {/* Mobile Completed Cars Panel - Right Side */}
+                  <div className="mobile mobile-completed-cars">
+                    <div className="mobile-panel-header">
+                      <h3 className="mobile-panel-title">✅ Exited ({visibleSimulationManager.getCompletedCars().length})</h3>
+                      <button 
+                        className="mobile-view-all-button"
+                        onClick={() => setShowCompletedModal(true)}
+                      >
+                        View All
+                      </button>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -951,7 +907,10 @@ function App() {
                       
                       return (
                         <details key={car.id} className={`mobile-modal-car-item ${isPastTime ? 'past-time' : ''}`}>
-                          <summary className="mobile-modal-car-header">
+                          <summary 
+                            className="mobile-modal-car-header"
+                            onClick={(e) => e.stopPropagation()}
+                          >
                             <span className="mobile-modal-car-unicode">
                               {car.getUnicodeChar()}
                             </span>
@@ -1013,7 +972,10 @@ function App() {
                       
                       return (
                         <details key={car.id} className="mobile-modal-car-item completed">
-                          <summary className="mobile-modal-car-header">
+                          <summary 
+                            className="mobile-modal-car-header"
+                            onClick={(e) => e.stopPropagation()}
+                          >
                             <span className="mobile-modal-car-unicode">
                               {car.getUnicodeChar()}
                             </span>

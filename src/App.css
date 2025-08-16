@@ -323,13 +323,23 @@ main {
   margin: 12px 0;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   border: 1px solid rgba(0, 0, 0, 0.1);
+  flex: 1;
+  min-width: 0;
+}
+
+/* Mobile Stats Row - Horizontal Layout */
+.mobile-stats-row {
+  display: flex;
+  gap: 12px;
+  margin: 12px 0;
+  width: 100%;
 }
 
 .mobile-panel-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 12px;
+  margin-bottom: 0;
 }
 
 .mobile-panel-title {
