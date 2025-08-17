@@ -51,7 +51,7 @@
 }
 
 /* Mobile-first responsive design - ensure proper scaling */
-@media (max-width: 600px) {
+@media (max-width: 1000px) {
   .parking-lot-container {
     padding: 4px;
     margin-top: 20px;

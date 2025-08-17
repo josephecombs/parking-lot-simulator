@@ -632,7 +632,7 @@ function App() {
                       cursor: 'pointer',
                       boxShadow: '0 4px 12px rgba(0,0,0,0.2)',
                       transition: 'all 0.3s ease',
-                      minWidth: '200px',
+                      minWidth: '100px',
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'center',
@@ -649,13 +649,13 @@ function App() {
                   >
                     {isHandicappedMode ? (
                       <>
+                        Remove
                         <span style={{ fontSize: '20px' }}>♿</span>
-                        Show "No Handicapped Space" Simulation
                       </>
                     ) : (
                       <>
+                        Add
                         <span style={{ fontSize: '20px' }}>♿</span>
-                        Show "Handicapped Space" Simulation
                       </>
                     )}
                   </button>
