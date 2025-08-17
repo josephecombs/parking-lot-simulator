@@ -820,19 +820,19 @@ function App() {
                 {/* Mobile Summary Statistics */}
                 <div className="mobile mobile-summary-stats">
                   <div style={{ 
-                    background: 'rgba(255,255,255,0.95)', 
+                    background: 'rgba(44, 62, 80, 0.9)', 
                     backdropFilter: 'blur(10px)',
                     borderRadius: '12px',
                     padding: '16px',
                     margin: '12px 0',
-                    boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
-                    border: '1px solid rgba(0,0,0,0.1)',
+                    boxShadow: '0 2px 8px rgba(0,0,0,0.2)',
+                    border: '1px solid rgba(255,255,255,0.1)',
                     textAlign: 'center'
                   }}>
-                    <div style={{ fontWeight: 'bold', fontSize: '17px', color: '#2e3a4d', marginBottom: '12px' }}>
+                    <div style={{ fontWeight: 'bold', fontSize: '17px', color: '#ffffff', marginBottom: '12px' }}>
                       🚶‍♂️ Walk & 🚗 Drive Summary:
                     </div>
-                    <div style={{ fontSize: '15px', color: '#495057', marginBottom: '16px' }}>
+                    <div style={{ fontSize: '15px', color: '#ffffff', marginBottom: '16px' }}>
                       Lot Occupancy: {lotOccupancyPercent}%
                     </div>
                     <div style={{ 
@@ -844,10 +844,10 @@ function App() {
                       <div style={{ fontWeight: 'bold', fontSize: '15px', color: '#ffd700', marginBottom: '8px' }}>
                         ♿ Handicapped Space Cost:
                       </div>
-                      <div style={{ fontSize: '13px', color: '#495057', marginBottom: '4px' }}>
+                      <div style={{ fontSize: '13px', color: '#ffffff', marginBottom: '4px' }}>
                         Walk Time: {handicappedStats.formatted.totalWalk} (♿) vs {nonHandicappedStats.formatted.totalWalk} (🚗)
                       </div>
-                      <div style={{ fontSize: '13px', color: '#495057' }}>
+                      <div style={{ fontSize: '13px', color: '#ffffff' }}>
                         Drive Time: {handicappedStats.formatted.totalDrive} (♿) vs {nonHandicappedStats.formatted.totalDrive} (🚗)
                       </div>
                     </div>
