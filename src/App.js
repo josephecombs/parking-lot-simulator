@@ -723,7 +723,7 @@ function App() {
                     gap: '4px'
                   }}
                 >
-                  {isHandicappedMode ? '♿' : '🚗'}
+                  {isHandicappedMode ? '- ♿' : '+ ♿' }
                 </button>
                 <button 
                   onClick={() => setShowMobileModal(true)}
