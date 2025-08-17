@@ -910,6 +910,7 @@ function App() {
                           <summary 
                             className="mobile-modal-car-header"
                             onClick={(e) => e.stopPropagation()}
+                            style={{width: '100%'}}
                           >
                             <span className="mobile-modal-car-unicode">
                               {car.getUnicodeChar()}
@@ -975,6 +976,7 @@ function App() {
                           <summary 
                             className="mobile-modal-car-header"
                             onClick={(e) => e.stopPropagation()}
+                            style={{width: '100%'}}
                           >
                             <span className="mobile-modal-car-unicode">
                               {car.getUnicodeChar()}

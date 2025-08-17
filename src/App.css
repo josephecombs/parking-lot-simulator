@@ -443,13 +443,12 @@ main {
 
 .mobile-modal-car-item {
   display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 12px;
+  flex-direction: column;
   background: #f8f9fa;
   border: 1px solid #dee2e6;
   border-radius: 8px;
   transition: all 0.2s ease;
+  width: 100%;
 }
 
 .mobile-modal-car-item:hover {
@@ -506,10 +505,12 @@ main {
   align-items: center;
   gap: 12px;
   cursor: pointer;
-  padding: 8px;
+  padding: 12px;
   border-radius: 6px;
   transition: background-color 0.2s ease;
   list-style: none;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .mobile-modal-car-header:hover {
