@@ -775,7 +775,7 @@ function App() {
                   </div>
                   <div className="mobile-speed-controls">
                     <span className="mobile-speed-label">Speed:</span>
-                    {[1, 4, 8, 16, 32].map((speed) => (
+                    {[1, 8, 16, 32].map((speed) => (
                       <button
                         key={speed}
                         onClick={() => setSimulationSpeed(speed)}
@@ -916,9 +916,130 @@ function App() {
                     </button>
                   </div>
                   <div style={{ color: '#333', lineHeight: '1.6' }}>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-                    <p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
-                    <p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</p>
+                    {/* Simulation Control Buttons */}
+                    <div style={{ marginBottom: '20px' }}>
+                      <div style={{ display: 'flex', gap: '8px', marginBottom: '16px' }}>
+                        <button 
+                          onClick={startSimulation} 
+                          disabled={isSimulationRunning}
+                          style={{ 
+                            padding: '8px 16px', 
+                            fontSize: '14px',
+                            background: isSimulationRunning ? '#ccc' : '#4CAF50',
+                            color: 'white',
+                            border: 'none',
+                            borderRadius: '4px',
+                            cursor: isSimulationRunning ? 'not-allowed' : 'pointer',
+                            flex: 1
+                          }}
+                        >
+                          Start Simulation
+                        </button>
+                        <button 
+                          onClick={pauseSimulation} 
+                          disabled={!isSimulationRunning}
+                          style={{ 
+                            padding: '8px 16px', 
+                            fontSize: '14px',
+                            background: !isSimulationRunning ? '#ccc' : '#f44336',
+                            color: 'white',
+                            border: 'none',
+                            borderRadius: '4px',
+                            cursor: !isSimulationRunning ? 'not-allowed' : 'pointer',
+                            flex: 1
+                          }}
+                        >
+                          Pause
+                        </button>
+                        <button 
+                          onClick={reloadPage}
+                          style={{ 
+                            padding: '8px 16px', 
+                            fontSize: '14px',
+                            background: '#2196F3',
+                            color: 'white',
+                            border: 'none',
+                            borderRadius: '4px',
+                            cursor: 'pointer',
+                            flex: 1
+                          }}
+                        >
+                          Reload
+                        </button>
+                      </div>
+                    </div>
+
+                    {/* Handicapped Walk Speed Penalty */}
+                    <div style={{ marginBottom: '20px' }}>
+                      <label style={{ 
+                        display: 'block', 
+                        fontSize: '14px', 
+                        fontWeight: 'bold', 
+                        marginBottom: '8px',
+                        color: '#333'
+                      }}>
+                        Handicapped Walk Speed Penalty
+                      </label>
+                      <div style={{ display: 'flex', gap: '8px' }}>
+                        {[
+                          { value: 1.1, label: '10% slower' },
+                          { value: 1.3, label: '30% slower' },
+                          { value: 1.5, label: '50% slower' }
+                        ].map(({ value, label }) => (
+                          <button
+                            key={value}
+                            onClick={() => restartSimulationWithOptions(value, numCars)}
+                            style={{
+                              background: handicappedWalkSpeedPenalty === value ? '#ffd700' : '#f0f0f0',
+                              color: handicappedWalkSpeedPenalty === value ? '#222' : '#333',
+                              border: '1px solid #ddd',
+                              borderRadius: '4px',
+                              padding: '8px 12px',
+                              fontSize: '12px',
+                              cursor: 'pointer',
+                              flex: 1,
+                              fontWeight: handicappedWalkSpeedPenalty === value ? 'bold' : 'normal'
+                            }}
+                          >
+                            {label}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Number of Cars */}
+                    <div style={{ marginBottom: '20px' }}>
+                      <label style={{ 
+                        display: 'block', 
+                        fontSize: '14px', 
+                        fontWeight: 'bold', 
+                        marginBottom: '8px',
+                        color: '#333'
+                      }}>
+                        Number of Cars
+                      </label>
+                      <div style={{ display: 'flex', gap: '8px' }}>
+                        {[40, 60, 80, 100].map((value) => (
+                          <button
+                            key={value}
+                            onClick={() => restartSimulationWithOptions(handicappedWalkSpeedPenalty, value)}
+                            style={{
+                              background: numCars === value ? '#ffd700' : '#f0f0f0',
+                              color: numCars === value ? '#222' : '#333',
+                              border: '1px solid #ddd',
+                              borderRadius: '4px',
+                              padding: '8px 12px',
+                              fontSize: '12px',
+                              cursor: 'pointer',
+                              flex: 1,
+                              fontWeight: numCars === value ? 'bold' : 'normal'
+                            }}
+                          >
+                            {value}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
