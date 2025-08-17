@@ -116,7 +116,7 @@ main {
 }
 
 /* Hide mobile elements on larger screens */
-@media (min-width: 751px) {
+@media (min-width: 1001px) {
   .mobile {
     display: none !important;
   }
